@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using AR.Bootstrap;
 using UI.Bootstrap;
 using Zenject;
 
@@ -9,6 +9,7 @@ namespace Main.Bootstrap
         public override void InstallBindings()
         {
             Container.Install<UIBootstrap>();
+            Container.Install<ARInstaller>();
         }
     }
 }

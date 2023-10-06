@@ -22,10 +22,7 @@ namespace UI.Bootstrap
                 .AsSingle()
                 .NonLazy();
 
-            Container
-                .BindInterfacesTo<UIService>()
-                .AsSingle()
-                .NonLazy();
+            Container.InstallServiceAsInterface<UIService>();
         }
     }
 }

@@ -2,7 +2,9 @@
     "name": "HellGame",
     "rootNamespace": "",
     "references": [
-        "Zenject"
+        "Zenject",
+        "UniRx",
+        "ARDK"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -5,7 +5,7 @@ using Zenject;
 
 namespace UI.Services
 {
-    internal class UIService: IUiService, IInitializable
+    public class UIService: IUiService, IInitializable
     {
         private readonly UIComponent _uiComponent;
         private readonly StartGameUI.Factory _startGameUiFactory;
