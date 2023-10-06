@@ -157,7 +157,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.MyCompany.HellGame
-    Standalone: com.DefaultCompany.HellGame
+    Standalone: com.MyCompany.HellGame
   buildNumber:
     Standalone: 0
     VisionOS: 0
