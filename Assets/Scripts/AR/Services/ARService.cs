@@ -7,12 +7,12 @@ namespace AR.Services
     {
         private readonly ARAggregate _aggregate;
 
-        private ARService(ARAggregate aggregate)
+        internal ARService(ARAggregate aggregate)
         {
             _aggregate = aggregate;
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             _aggregate.CreateARComponents();
         }
