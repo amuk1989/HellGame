@@ -1,23 +1,20 @@
-﻿using AR.Interfaces;
-using AR.View;
-using Niantic.ARDK.AR;
-using Zenject;
+﻿using AR.Aggregates;
+using AR.Interfaces;
 
 namespace AR.Services
 {
     public class ARService: IARService
     {
-        private readonly ARManager.ARFactory _arFactory;
-        private ARManager _arManager;
+        private readonly ARAggregate _aggregate;
 
-        internal ARService(ARManager.ARFactory arFactory)
+        private ARService(ARAggregate aggregate)
         {
-            _arFactory = arFactory;
+            _aggregate = aggregate;
         }
 
         public void Initialize()
         {
-            if (_arManager == null) _arManager = _arFactory.Create();
+            _aggregate.CreateARComponents();
         }
     }
 }
