@@ -7,7 +7,7 @@ using Zenject;
 
 namespace UI.Views
 {
-    public class StartGameUI: MonoBehaviour
+    public class StartGameUI: MonoBehaviour, IDisposable
     {
         public class Factory: PlaceholderFactory<Transform, StartGameUI>
         {
@@ -29,6 +29,11 @@ namespace UI.Views
                 .OnClickAsObservable()
                 .Subscribe(_ => _arService.Initialize())
                 .AddTo(this);
+        }
+
+        public void Dispose()
+        {
+            Destroy(gameObject);
         }
     }
 }
