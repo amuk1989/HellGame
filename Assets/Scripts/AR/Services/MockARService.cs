@@ -1,5 +1,6 @@
 ﻿using AR.Aggregates;
 using AR.Interfaces;
+using AR.Repositories;
 using AR.View;
 using Zenject;
 
@@ -9,14 +10,15 @@ namespace AR.Services
     {
         private readonly PlaceholderFactory<MockRoom> _mockRoomFactory;
 
-        private MockARService(ARAggregate aggregate, PlaceholderFactory<MockRoom> mockRoomFactory) : base(aggregate)
+        private MockARService(ARAggregate aggregate, ARPlaneRepository arPlaneRepository, 
+            PlaceholderFactory<MockRoom> mockRoomFactory) : base(aggregate, arPlaneRepository)
         {
             _mockRoomFactory = mockRoomFactory;
         }
 
-        public override void Initialize()
+        public override void StartCollection()
         {
-            base.Initialize();
+            base.StartCollection();
             _mockRoomFactory.Create();
         }
     }

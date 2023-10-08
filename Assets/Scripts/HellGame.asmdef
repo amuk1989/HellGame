@@ -4,7 +4,9 @@
     "references": [
         "Zenject",
         "UniRx",
-        "ARDK"
+        "ARDK",
+        "Unity.Mathematics",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

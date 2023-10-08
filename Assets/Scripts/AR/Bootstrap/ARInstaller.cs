@@ -1,5 +1,6 @@
 ﻿using AR.Aggregates;
 using AR.Interfaces;
+using AR.Repositories;
 using AR.Services;
 using AR.View;
 using Utility;
@@ -13,17 +14,14 @@ namespace AR.Bootstrap
         {
 #if UNITY_EDITOR
             Container
-                .Bind<IARService>()
-                .To<MockARService>()
+                .BindInterfacesTo<MockARService>()
                 .AsSingle()
                 .NonLazy();
 #else
             Container
-                .Bind<IARService>()
-                .To<ARService>()
+                .BindInterfacesTo<ARService>()
                 .AsSingle()
                 .NonLazy();
-
 #endif
 
             Container
@@ -42,6 +40,11 @@ namespace AR.Bootstrap
 
             Container
                 .BindInterfacesAndSelfTo<ARAggregate>()
+                .AsSingle()
+                .NonLazy();
+
+            Container
+                .Bind<ARPlaneRepository>()
                 .AsSingle()
                 .NonLazy();
         }
