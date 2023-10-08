@@ -47,6 +47,11 @@ namespace AR.Bootstrap
                 .Bind<ARPlaneRepository>()
                 .AsSingle()
                 .NonLazy();
+            
+            Container
+                .Bind<ARMeshRepository>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

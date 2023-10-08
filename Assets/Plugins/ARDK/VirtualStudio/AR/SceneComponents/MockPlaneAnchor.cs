@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections;
-
+using Niantic.ARDK.AR;
 using Niantic.ARDK.AR.Anchors;
 using Niantic.ARDK.Utilities;
 using Niantic.ARDK.Utilities.Logging;
@@ -123,7 +123,7 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
             _planeAlignment,
             PlaneClassification.None,
             PlaneClassificationStatus.Undetermined,
-            Vector3.zero,
+            transform.position+_center,
             Vector3.zero
           );
 
@@ -146,13 +146,23 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
           gameObject.name
         );
 
-        enabled = false;
+        StartCoroutine(WaitStartSession(arSession));
+
+        // enabled = false;
       }
     }
 
     internal override void RemoveAnchorFromSession(_IMockARSession arSession)
     {
       arSession.RemoveAnchor(_anchorData);
+    }
+
+    private IEnumerator WaitStartSession(_IMockARSession arSession)
+    {
+      yield return new WaitUntil(() => arSession.State == ARSessionState.Running);
+      UpdateAnchorData();
+      arSession.AddAnchor(_anchorData);
+      yield return ClassifyPlane(arSession);
     }
 
     private IEnumerator ClassifyPlane(_IMockARSession arSession)

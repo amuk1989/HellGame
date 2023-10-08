@@ -4,6 +4,7 @@ using AR.View;
 using JetBrains.Annotations;
 using Niantic.ARDK.AR;
 using Niantic.ARDK.AR.ARSessionEventArgs;
+using Niantic.ARDK.AR.Mesh;
 using UniRx;
 
 namespace AR.Aggregates
@@ -26,6 +27,7 @@ namespace AR.Aggregates
         }
 
         [CanBeNull] internal IARSession ARSession => _arManager.SessionManager.ARSession;
+        [CanBeNull] internal IARMesh ARMesh => _arManager.SessionManager.ARSession.Mesh;
 
         internal void CreateARComponents()
         {

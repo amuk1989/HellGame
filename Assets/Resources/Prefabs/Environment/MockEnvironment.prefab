@@ -1,5 +1,56 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &558463655638313092
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3195897222180204104}
+  - component: {fileID: 8188751462415149792}
+  m_Layer: 6
+  m_Name: MockPlane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3195897222180204104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558463655638313092}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1996629073594359173}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8188751462415149792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558463655638313092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efac6a083cc96476b94cbcda0cfb8ffd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timeToDiscovery: 1
+  _center: {x: 0, y: -1, z: 0}
+  _rotation: {x: 0, y: 0, z: 0}
+  _planeAlignment: 1
+  _shouldSuccessfullyClassify: 0
+  _planeClassification: 2
+  _timeToClassify: 1
 --- !u!1 &1966263748441762220
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,7 +61,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4847622356917902307}
   - component: {fileID: 857666533926186859}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MockRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,8 +107,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1996629073594359173}
-  - component: {fileID: 2525713577034500324}
-  m_Layer: 0
+  - component: {fileID: 8641148899464214181}
+  - component: {fileID: 7416015062197238321}
+  m_Layer: 6
   m_Name: MockEnvironment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,9 +130,22 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4847622356917902307}
+  - {fileID: 3195897222180204104}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2525713577034500324
+--- !u!114 &8641148899464214181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8481639832991021042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356a576ce733a4b21bee15f55b9f0741, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7416015062197238321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -6,7 +6,9 @@ using AR.Interfaces;
 using AR.Repositories;
 using Niantic.ARDK.AR.Anchors;
 using Niantic.ARDK.AR.ARSessionEventArgs;
+using Niantic.ARDK.AR.Mesh;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace AR.Services
@@ -15,11 +17,13 @@ namespace AR.Services
     {
         private readonly ARAggregate _aggregate;
         private readonly ARPlaneRepository _arPlaneRepository;
+        private readonly ARMeshRepository _arMeshRepository;
 
-        internal ARService(ARAggregate aggregate, ARPlaneRepository arPlaneRepository)
+        internal ARService(ARAggregate aggregate, ARPlaneRepository arPlaneRepository, ARMeshRepository arMeshRepository)
         {
             _aggregate = aggregate;
             _arPlaneRepository = arPlaneRepository;
+            _arMeshRepository = arMeshRepository;
         }
 
         public bool IsInitialized => _aggregate.ARSession != null;
@@ -36,10 +40,15 @@ namespace AR.Services
 
         public virtual void StartCollection()
         {
+            if (!IsInitialized) return;
+            
             _aggregate.ARSession!.AnchorsAdded += AddPlane;
             _aggregate.ARSession!.AnchorsMerged += MergePlanes;
             _aggregate.ARSession!.AnchorsRemoved += RemovePlane;
             _aggregate.ARSession!.AnchorsUpdated += UpdatePlane;
+
+            _aggregate.ARMesh!.MeshBlocksUpdated += _arMeshRepository.UpdateMeshes;
+            _aggregate.ARMesh!.MeshBlocksCleared += _arMeshRepository.ClearMeshes;
         }
 
         public void StopCollection()
@@ -50,6 +59,9 @@ namespace AR.Services
             _aggregate.ARSession.AnchorsMerged -= MergePlanes;
             _aggregate.ARSession.AnchorsRemoved -= RemovePlane;
             _aggregate.ARSession.AnchorsUpdated -= UpdatePlane;
+            
+            _aggregate.ARMesh!.MeshBlocksUpdated -= _arMeshRepository.UpdateMeshes;
+            _aggregate.ARMesh!.MeshBlocksCleared -= _arMeshRepository.ClearMeshes;
         }
 
         public void Dispose()
@@ -62,8 +74,9 @@ namespace AR.Services
             .Merge(_arPlaneRepository.OnPlaneAdded);
 
         public IObservable<PlaneData> OnPlaneRemoved => _arPlaneRepository.OnPlaneUpdated;
-
+        public IObservable<Unit> OnMeshUpdated => _arMeshRepository.OnMeshUpdated;
         public IReadOnlyList<PlaneData> Planes => _arPlaneRepository.Planes;
+        public IEnumerable<Mesh> Meshes => _arMeshRepository.Meshes;
 
         private void AddPlane(AnchorsArgs args)
         {
@@ -103,8 +116,7 @@ namespace AR.Services
         {
             foreach (var arAnchor in args.Anchors)
             {
-                var anchor = arAnchor as IARPlaneAnchor;
-                if (anchor == null) continue;
+                if (arAnchor is not IARPlaneAnchor anchor) continue;
                 _arPlaneRepository.UpdatePlane(anchor.Identifier.ToString(), anchor);
             }
         }

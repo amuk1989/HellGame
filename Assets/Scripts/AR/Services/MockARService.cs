@@ -11,7 +11,8 @@ namespace AR.Services
         private readonly PlaceholderFactory<MockRoom> _mockRoomFactory;
 
         private MockARService(ARAggregate aggregate, ARPlaneRepository arPlaneRepository, 
-            PlaceholderFactory<MockRoom> mockRoomFactory) : base(aggregate, arPlaneRepository)
+            ARMeshRepository meshRepository,PlaceholderFactory<MockRoom> mockRoomFactory) : 
+            base(aggregate, arPlaneRepository, meshRepository)
         {
             _mockRoomFactory = mockRoomFactory;
         }
