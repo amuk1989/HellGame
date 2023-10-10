@@ -9,7 +9,15 @@ namespace PlaneMeshing.Utilities
 {
     public static class MeshingUtility
     {
-        public static (int, NativeArray<bool>) CheckInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize)
+        public static NativeArray<int> GetInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize)
+        {
+            var verticesData = CheckInsideVertices(mesh, bounceCenter, bounceSize);
+
+            return GetInsideVertices(new NativeArray<int>(mesh.triangles, Allocator.TempJob), verticesData.Item2,
+                verticesData.Item1);
+        }
+        
+        private static (int, NativeArray<bool>) CheckInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize)
         {
             NativeArray<bool> triangles = new(mesh.triangles.Length, Allocator.Temp);
             
@@ -33,14 +41,6 @@ namespace PlaneMeshing.Utilities
             }
 
             return (count, triangles);
-        }
-
-        public static NativeArray<int> GetInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize)
-        {
-            var verticesData = CheckInsideVertices(mesh, bounceCenter, bounceSize);
-
-            return GetInsideVertices(new NativeArray<int>(mesh.triangles, Allocator.TempJob), verticesData.Item2,
-                verticesData.Item1);
         }
 
         private static NativeArray<int> GetInsideVertices(NativeArray<int> originTriangles, 

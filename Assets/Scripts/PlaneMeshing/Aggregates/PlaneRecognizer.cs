@@ -10,6 +10,7 @@ using UniRx;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Zenject;
 
 namespace PlaneMeshing.Aggregates
@@ -51,9 +52,9 @@ namespace PlaneMeshing.Aggregates
                     
                     for (int i = 0; i < meshes.Length; i++)
                     {
-                        var triangles = MeshingUtility.CheckInsideVertices(meshes[i], plane.Center, plane.Extends);
-                        if (triangles.Item1 == 0) continue;
-                        Debug.Log(triangles.Item1);
+                        // var triangles = MeshingUtility.CheckInsideVertices(meshes[i], plane.Center, plane.Extends);
+                        // if (triangles.Item1 == 0) continue;
+                        // Debug.Log(triangles.Item1);
                         // CreatePlaneMesh(meshes[i].vertices, meshes[i].triangles );
                         // DeleteTriangles(meshes[i], triangles.Item2.ToArray());
                         // break;
@@ -71,29 +72,58 @@ namespace PlaneMeshing.Aggregates
                     
             if (meshes.Length == 0 || planes.IsEmpty()) return;
 
-            var plane = planes.First();
-                    
-            for (int i = 0; i < meshes.Length; i++)
+            for (int i = 0; i < planes.Count; i++)
             {
-                var triangles = MeshingUtility.GetInsideVertices(meshes[i], plane.Center, plane.Extends);
-                if (triangles.Length == 0) continue;
-                CreateMesh(meshes[i], triangles);
+                for (int j = 0; j < meshes.Length; j++)
+                {
+                    var triangles = MeshingUtility.GetInsideVertices(meshes[j], planes[i].Center, planes[i].Extends);
+                    if (triangles.Length == 0) continue;
+                    
+                    var data = GetMeshData(Mesh.AllocateWritableMeshData(1), triangles, new NativeArray<Vector3>(meshes[j].vertices, Allocator.TempJob));
+                    
+                    CreateMesh(data);
+                }
             }
         }
 
-        private void CreateMesh(Mesh originMesh, NativeArray<int> triangles)
+        private static Mesh.MeshDataArray GetMeshData(Mesh.MeshDataArray dataArray, NativeArray<int> triangles, NativeArray<Vector3> vertices)
         {
-            var newMesh = new Mesh();
+            var data = dataArray[0];
             
-            newMesh.vertices = originMesh.vertices;
-            newMesh.uv = originMesh.uv;
-            newMesh.normals = originMesh.normals;
-            newMesh.triangles = triangles.ToArray();
+            data.SetVertexBufferParams(vertices.Length,
+                new VertexAttributeDescriptor(VertexAttribute.Position),
+                new VertexAttributeDescriptor(VertexAttribute.Normal, stream: 1));
             
-            newMesh.RecalculateBounds();
-            newMesh.RecalculateNormals();
+            var pos = data.GetVertexData<Vector3>();
 
-            _planeFactory.Create(newMesh);
+            for (int i = 0; i < pos.Length; i++)
+            {
+                pos[i] = vertices[i];
+            }
+            
+            data.SetIndexBufferParams(triangles.Length, IndexFormat.UInt16);
+            var ib = data.GetIndexData<ushort>();
+            
+            for (ushort i = 0; i < ib.Length; ++i)
+                ib[i] = (ushort)triangles[i];
+            
+            data.subMeshCount = 1;
+            
+            data.SetSubMesh(0, new SubMeshDescriptor(0, ib.Length));
+
+            return dataArray;
+        }
+
+        private void CreateMesh(Mesh.MeshDataArray dataArray)
+        {
+            var mesh = new Mesh();
+            
+            Mesh.ApplyAndDisposeWritableMeshData(dataArray, mesh);
+            
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+
+            _planeFactory.Create(mesh);
         }
 
         public void StopRecognizer()
