@@ -6,6 +6,6 @@
         public const string StartUi = "Prefabs/UI/StartUI";
         public const string ARManager = "Prefabs/ARSceneManager";
         public const string ARMesh = "Prefabs/ARMesh";
-        public const string MockRoom = "Prefabs/Environment/MockEnvironment";
+        public const string Plane = "Prefabs/Environment/PlaneView";
     }
 }

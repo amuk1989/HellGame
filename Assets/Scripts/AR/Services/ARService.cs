@@ -77,6 +77,7 @@ namespace AR.Services
         public IObservable<Unit> OnMeshUpdated => _arMeshRepository.OnMeshUpdated;
         public IReadOnlyList<PlaneData> Planes => _arPlaneRepository.Planes;
         public IEnumerable<Mesh> Meshes => _arMeshRepository.Meshes;
+        public IEnumerable<Vector3> MeshPositions => _arMeshRepository.MeshGlobalPositions;
 
         private void AddPlane(AnchorsArgs args)
         {

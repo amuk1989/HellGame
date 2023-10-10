@@ -13,5 +13,6 @@ namespace AR.Interfaces
         public IObservable<Unit> OnMeshUpdated { get; }
         public IReadOnlyList<PlaneData> Planes { get; }
         public IEnumerable<Mesh> Meshes { get; }
+        public IEnumerable<Vector3> MeshPositions { get; }
     }
 }
