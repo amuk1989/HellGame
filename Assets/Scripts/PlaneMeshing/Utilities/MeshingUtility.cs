@@ -9,7 +9,7 @@ namespace PlaneMeshing.Utilities
 {
     public static class MeshingUtility
     {
-        public static (int, NativeArray<bool>) GetInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize)
+        public static (int, NativeArray<bool>) CheckInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize)
         {
             NativeArray<bool> triangles = new(mesh.triangles.Length, Allocator.Temp);
             
@@ -35,6 +35,29 @@ namespace PlaneMeshing.Utilities
             return (count, triangles);
         }
 
+        public static NativeArray<int> GetInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize)
+        {
+            var verticesData = CheckInsideVertices(mesh, bounceCenter, bounceSize);
+
+            return GetInsideVertices(new NativeArray<int>(mesh.triangles, Allocator.TempJob), verticesData.Item2,
+                verticesData.Item1);
+        }
+
+        private static NativeArray<int> GetInsideVertices(NativeArray<int> originTriangles, 
+            NativeArray<bool> isValidTriangles, int size)
+        {
+            var triangles = new NativeArray<int>(size, Allocator.TempJob);
+
+            var index = 0;
+
+            for (int i = 0; i < originTriangles.Length; i++)
+            {
+                if (isValidTriangles[i]) triangles[index++] = originTriangles[i];
+            }
+
+            return triangles;
+        }
+
         private static bool IsInsidePoint(float3 point, float3 bounceCenter, float3 bounceSize)
         {
             point.y *= -1;
@@ -49,7 +72,7 @@ namespace PlaneMeshing.Utilities
             var pcd = TriangleArea(point, rect.C, rect.D);
             var pad = TriangleArea(point, rect.A, rect.D);
 
-            return (math.abs(pab + pcd + pbc + pad - rect.Area) < 0.05f);
+            return math.abs(pab + pcd + pbc + pad - rect.Area) < 0.05f;
         }
 
         private static float TriangleArea(float3 a, float3 b, float3 c)

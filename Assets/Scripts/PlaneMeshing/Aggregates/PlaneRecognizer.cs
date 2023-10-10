@@ -51,7 +51,7 @@ namespace PlaneMeshing.Aggregates
                     
                     for (int i = 0; i < meshes.Length; i++)
                     {
-                        var triangles = MeshingUtility.GetInsideVertices(meshes[i], plane.Center, plane.Extends);
+                        var triangles = MeshingUtility.CheckInsideVertices(meshes[i], plane.Center, plane.Extends);
                         if (triangles.Item1 == 0) continue;
                         Debug.Log(triangles.Item1);
                         // CreatePlaneMesh(meshes[i].vertices, meshes[i].triangles );
@@ -75,33 +75,20 @@ namespace PlaneMeshing.Aggregates
                     
             for (int i = 0; i < meshes.Length; i++)
             {
-                var trianglesData = MeshingUtility.GetInsideVertices(meshes[i], plane.Center, plane.Extends);
-                if (trianglesData.Item1 == 0) continue;
-                Debug.Log(trianglesData.Item1);
-                DeleteTrianglesAndVertices(meshes[i], trianglesData.Item2, trianglesData.Item1);
+                var triangles = MeshingUtility.GetInsideVertices(meshes[i], plane.Center, plane.Extends);
+                if (triangles.Length == 0) continue;
+                CreateMesh(meshes[i], triangles);
             }
         }
 
-        private void DeleteTrianglesAndVertices(Mesh mesh, NativeArray<bool> isValidTriangles, int size)
+        private void CreateMesh(Mesh originMesh, NativeArray<int> triangles)
         {
-            var triangles = new List<int>(mesh.triangles);
-
-            for (int i = 0; i < triangles.Count; i++)
-            {
-                if (isValidTriangles[i]) continue; 
-                triangles[i] = -1;
-            }
-
-            triangles.RemoveAll(x => x == -1);
-
-            var trianglesArray = triangles.ToArray();
-
             var newMesh = new Mesh();
             
-            newMesh.vertices = mesh.vertices;
-            newMesh.uv = mesh.uv;
-            newMesh.normals = mesh.normals;
-            newMesh.triangles = trianglesArray;
+            newMesh.vertices = originMesh.vertices;
+            newMesh.uv = originMesh.uv;
+            newMesh.normals = originMesh.normals;
+            newMesh.triangles = triangles.ToArray();
             
             newMesh.RecalculateBounds();
             newMesh.RecalculateNormals();
