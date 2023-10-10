@@ -15,6 +15,7 @@ namespace UI.Views
         }
 
         [SerializeField] private Button _startGameButton;
+        [SerializeField] private Button _stopScanButton;
 
         private IScanningService _scanningService;
 
@@ -27,6 +28,11 @@ namespace UI.Views
         private void Start()
         {
             _startGameButton
+                .OnClickAsObservable()
+                .Subscribe(_ => _scanningService.AsyncScanningTask())
+                .AddTo(this);
+            
+            _stopScanButton
                 .OnClickAsObservable()
                 .Subscribe(_ => _scanningService.AsyncScanningTask())
                 .AddTo(this);

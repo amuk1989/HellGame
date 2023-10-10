@@ -58,9 +58,11 @@ namespace PlaneMeshing.Utilities
             return triangles;
         }
 
-        private static bool IsInsidePoint(float3 point, float3 bounceCenter, float3 bounceSize)
+        public static bool IsInsidePoint(float3 point, float3 bounceCenter, float3 bounceSize)
         {
+#if UNITY_EDITOR
             point.y *= -1;
+#endif
             if (math.abs(point.y - bounceCenter.y) > 0.05f) return false;
 
             point.y = bounceCenter.y;

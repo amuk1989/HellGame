@@ -1,4 +1,5 @@
 ﻿using AR.Aggregates;
+using AR.Data;
 using AR.Interfaces;
 using AR.Repositories;
 using AR.Services;
@@ -10,6 +11,14 @@ namespace AR.Bootstrap
 {
     public class ARInstaller: Installer
     {
+        private ARDebugConfig _arDebugConfig;
+
+        [Inject]
+        private void Construct([InjectOptional]ARDebugConfig arDebugConfig)
+        {
+            _arDebugConfig = arDebugConfig;
+        }
+        
         public override void InstallBindings()
         {
             Container
@@ -39,6 +48,17 @@ namespace AR.Bootstrap
                 .Bind<ARMeshRepository>()
                 .AsSingle()
                 .NonLazy();
+            
+            if (_arDebugConfig == null) return;
+
+            Container
+                .BindInterfacesTo<ARDebugger>()
+                .AsSingle()
+                .NonLazy();
+
+            Container
+                .BindFactory<AnchorView, PlaceholderFactory<AnchorView>>()
+                .FromComponentInNewPrefab(_arDebugConfig.AnchorView);
         }
     }
 }

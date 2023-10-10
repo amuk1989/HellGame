@@ -6,7 +6,8 @@
         "UniRx",
         "ARDK",
         "Unity.Mathematics",
-        "UniTask"
+        "UniTask",
+        "Unity.Collections"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

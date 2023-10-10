@@ -19,6 +19,11 @@ namespace PlaneMeshing.View
 
         private void Start()
         {
+#if UNITY_EDITOR
+            transform.localScale = new Vector3(1, -1, 1);
+            #else
+            transform.localScale = new Vector3(1, 1, 1);
+#endif
             _meshFilter.mesh = _mesh;
             gameObject.name = _mesh.name;
         }
