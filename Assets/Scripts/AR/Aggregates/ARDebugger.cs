@@ -32,7 +32,8 @@ namespace AR.Aggregates
                         anchor = _anchorFactory.Create();
                     }
                     
-                    anchor.transform.position = plane.Center;
+                    anchor.transform.SetPositionAndRotation(plane.Center, plane.Rotation);
+                    anchor.SetSize(plane.Extends);
                     _anchors[plane.ID] = anchor;
                 })
                 .AddTo(_compositeDisposable);

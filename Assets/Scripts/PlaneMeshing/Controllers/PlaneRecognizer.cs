@@ -76,7 +76,7 @@ namespace PlaneMeshing.Aggregates
             {
                 for (int j = 0; j < meshes.Length; j++)
                 {
-                    var triangles = MeshingUtility.GetInsideVertices(meshes[j], planes[i].Center, planes[i].Extends);
+                    var triangles = MeshingUtility.GetInsideVertices(meshes[j], planes[i].Center, planes[i].Extends, planes[i].Rotation);
                     if (triangles.Length == 0) continue;
                     
                     var data = GetMeshData(Mesh.AllocateWritableMeshData(1), triangles, new NativeArray<Vector3>(meshes[j].vertices, Allocator.TempJob));

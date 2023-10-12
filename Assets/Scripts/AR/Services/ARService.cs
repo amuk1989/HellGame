@@ -73,7 +73,7 @@ namespace AR.Services
             .OnPlaneUpdated
             .Merge(_arPlaneRepository.OnPlaneAdded);
 
-        public IObservable<PlaneData> OnPlaneRemoved => _arPlaneRepository.OnPlaneUpdated;
+        public IObservable<PlaneData> OnPlaneRemoved => _arPlaneRepository.OnPlaneRemoved;
         public IObservable<Unit> OnMeshUpdated => _arMeshRepository.OnMeshUpdated;
         public IReadOnlyList<PlaneData> Planes => _arPlaneRepository.Planes;
         public IEnumerable<Mesh> Meshes => _arMeshRepository.Meshes;

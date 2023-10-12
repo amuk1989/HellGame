@@ -20,12 +20,12 @@ namespace AR.Repositories
 
         public void AddPlane(string id, IARPlaneAnchor planeAnchor)
         {
-            _planes[id] = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id);
+            _planes[id] = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id, planeAnchor.Transform.ToRotation());
         }
         
         public void UpdatePlane(string id, IARPlaneAnchor planeAnchor)
         {
-            _planes[id] = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id);
+            _planes[id] = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id,planeAnchor.Transform.ToRotation());
         }
 
         public void RemovePlane(string id)
