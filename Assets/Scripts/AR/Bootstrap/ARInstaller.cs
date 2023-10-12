@@ -35,7 +35,7 @@ namespace AR.Bootstrap
                 .FromComponentInNewPrefabResource(Consts.ARMesh);
 
             Container
-                .BindInterfacesAndSelfTo<ARAggregate>()
+                .BindInterfacesAndSelfTo<ARController>()
                 .AsSingle()
                 .NonLazy();
 

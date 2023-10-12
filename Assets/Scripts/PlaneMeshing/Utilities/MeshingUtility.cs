@@ -63,7 +63,7 @@ namespace PlaneMeshing.Utilities
 #if UNITY_EDITOR
             point.y *= -1;
 #endif
-            if (math.abs(point.y - bounceCenter.y) > 0.05f) return false;
+            if (math.abs(point.y - bounceCenter.y) > 0.1f) return false;
 
             point.y = bounceCenter.y;
 

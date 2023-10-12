@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AR.Data;
 using Niantic.ARDK.AR.Anchors;
+using Niantic.ARDK.Utilities;
 using UniRx;
 
 namespace AR.Repositories
@@ -19,12 +20,12 @@ namespace AR.Repositories
 
         public void AddPlane(string id, IARPlaneAnchor planeAnchor)
         {
-            _planes[id] = new PlaneData(planeAnchor.Center, planeAnchor.Extent, id);
+            _planes[id] = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id);
         }
         
         public void UpdatePlane(string id, IARPlaneAnchor planeAnchor)
         {
-            _planes[id] = new PlaneData(planeAnchor.Center, planeAnchor.Extent, id);
+            _planes[id] = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id);
         }
 
         public void RemovePlane(string id)

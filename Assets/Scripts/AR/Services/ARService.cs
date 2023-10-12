@@ -15,18 +15,18 @@ namespace AR.Services
 {
     public class ARService: IARService, IARProvider, IDisposable, IInitializable
     {
-        private readonly ARAggregate _aggregate;
+        private readonly ARController _controller;
         private readonly ARPlaneRepository _arPlaneRepository;
         private readonly ARMeshRepository _arMeshRepository;
 
-        internal ARService(ARAggregate aggregate, ARPlaneRepository arPlaneRepository, ARMeshRepository arMeshRepository)
+        internal ARService(ARController controller, ARPlaneRepository arPlaneRepository, ARMeshRepository arMeshRepository)
         {
-            _aggregate = aggregate;
+            _controller = controller;
             _arPlaneRepository = arPlaneRepository;
             _arMeshRepository = arMeshRepository;
         }
 
-        public bool IsInitialized => _aggregate.ARSession != null;
+        public bool IsInitialized => _controller.ARSession != null;
 
         public void Initialize()
         {
@@ -35,33 +35,33 @@ namespace AR.Services
         
         public void ARInitialize()
         {
-            _aggregate.CreateARComponents();
+            _controller.CreateARComponents();
         }
 
         public virtual void StartCollection()
         {
             if (!IsInitialized) return;
             
-            _aggregate.ARSession!.AnchorsAdded += AddPlane;
-            _aggregate.ARSession!.AnchorsMerged += MergePlanes;
-            _aggregate.ARSession!.AnchorsRemoved += RemovePlane;
-            _aggregate.ARSession!.AnchorsUpdated += UpdatePlane;
+            _controller.ARSession!.AnchorsAdded += AddPlane;
+            _controller.ARSession!.AnchorsMerged += MergePlanes;
+            _controller.ARSession!.AnchorsRemoved += RemovePlane;
+            _controller.ARSession!.AnchorsUpdated += UpdatePlane;
 
-            _aggregate.ARMesh!.MeshBlocksUpdated += _arMeshRepository.UpdateMeshes;
-            _aggregate.ARMesh!.MeshBlocksCleared += _arMeshRepository.ClearMeshes;
+            _controller.ARMesh!.MeshBlocksUpdated += _arMeshRepository.UpdateMeshes;
+            _controller.ARMesh!.MeshBlocksCleared += _arMeshRepository.ClearMeshes;
         }
 
         public void StopCollection()
         {
-            if (_aggregate.ARSession == null) return;
+            if (_controller.ARSession == null) return;
             
-            _aggregate.ARSession.AnchorsAdded -= AddPlane;
-            _aggregate.ARSession.AnchorsMerged -= MergePlanes;
-            _aggregate.ARSession.AnchorsRemoved -= RemovePlane;
-            _aggregate.ARSession.AnchorsUpdated -= UpdatePlane;
+            _controller.ARSession.AnchorsAdded -= AddPlane;
+            _controller.ARSession.AnchorsMerged -= MergePlanes;
+            _controller.ARSession.AnchorsRemoved -= RemovePlane;
+            _controller.ARSession.AnchorsUpdated -= UpdatePlane;
             
-            _aggregate.ARMesh!.MeshBlocksUpdated -= _arMeshRepository.UpdateMeshes;
-            _aggregate.ARMesh!.MeshBlocksCleared -= _arMeshRepository.ClearMeshes;
+            _controller.ARMesh!.MeshBlocksUpdated -= _arMeshRepository.UpdateMeshes;
+            _controller.ARMesh!.MeshBlocksCleared -= _arMeshRepository.ClearMeshes;
         }
 
         public void Dispose()
@@ -83,8 +83,7 @@ namespace AR.Services
         {
             foreach (var arAnchor in args.Anchors)
             {
-                var anchor = arAnchor as IARPlaneAnchor;
-                if (anchor == null) continue;
+                if (arAnchor is not IARPlaneAnchor anchor) continue;
                 _arPlaneRepository.AddPlane(anchor.Identifier.ToString(), anchor);
             }
         }

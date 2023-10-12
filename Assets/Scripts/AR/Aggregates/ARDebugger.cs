@@ -27,7 +27,11 @@ namespace AR.Aggregates
                 .OnPlaneUpdated
                 .Subscribe(plane =>
                 {
-                    var anchor = _anchorFactory.Create();
+                    if (!_anchors.TryGetValue(plane.ID, out var anchor))
+                    {
+                        anchor = _anchorFactory.Create();
+                    }
+                    
                     anchor.transform.position = plane.Center;
                     _anchors[plane.ID] = anchor;
                 })
@@ -38,6 +42,8 @@ namespace AR.Aggregates
                 .Subscribe(plane =>
                 {
                     if (!_anchors.ContainsKey(plane.ID)) return;
+                    var view = _anchors[plane.ID];
+                    view.Dispose();
                     _anchors.Remove(plane.ID);
                 })
                 .AddTo(_compositeDisposable);
