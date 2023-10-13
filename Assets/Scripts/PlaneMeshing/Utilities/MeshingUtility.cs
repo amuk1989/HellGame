@@ -9,41 +9,7 @@ namespace PlaneMeshing.Utilities
 {
     public static class MeshingUtility
     {
-        public static NativeArray<int> GetInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize, quaternion rotation)
-        {
-            NativeArray<bool> triangles = new(mesh.triangles.Length, Allocator.Temp);
-            var verticesData = CheckInsideVertices(mesh, bounceCenter, bounceSize, triangles, rotation);
-
-            return GetInsideVertices(new NativeArray<int>(mesh.triangles, Allocator.TempJob), verticesData.Item2,
-                verticesData.Item1);
-        }
-        
-        private static (int, NativeArray<bool>) CheckInsideVertices(Mesh mesh, float3 bounceCenter, float3 bounceSize, 
-            NativeArray<bool> triangles, quaternion rotation)
-        {
-            int count = 0;
-
-            for (int i = 0; i < mesh.triangles.Length; i+=3)
-            {
-                triangles[i] = false;
-                triangles[i+1] = false;
-                triangles[i+2] = false;
-                
-                if (!IsInsidePoint(mesh.vertices[mesh.triangles[i]], bounceCenter, bounceSize, rotation)) continue;
-                if (!IsInsidePoint(mesh.vertices[mesh.triangles[i+1]], bounceCenter, bounceSize, rotation)) continue;
-                if (!IsInsidePoint(mesh.vertices[mesh.triangles[i+2]], bounceCenter, bounceSize, rotation)) continue;
-
-                count+=3;
-
-                triangles[i] = true;
-                triangles[i+1] = true;
-                triangles[i+2] = true;
-            }
-
-            return (count, triangles);
-        }
-
-        private static NativeArray<int> GetInsideVertices(NativeArray<int> originTriangles, 
+        public static NativeArray<int> GetValidVertices(NativeArray<int> originTriangles, 
             NativeArray<bool> isValidTriangles, int size)
         {
             var triangles = new NativeArray<int>(size, Allocator.TempJob);

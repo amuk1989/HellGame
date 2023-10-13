@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading;
 using AR.Interfaces;
 using ModestTree;
+using PlaneMeshing.Jobs;
 using PlaneMeshing.Utilities;
 using PlaneMeshing.View;
 using UniRx;
 using Unity.Collections;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -23,6 +25,7 @@ namespace PlaneMeshing.Aggregates
         private readonly PlaceholderFactory<Mesh, PlaneView> _planeFactory;
 
         private readonly Semaphore _semaphore = new Semaphore(1,1);
+        private JobHandle _jobHandle;
 
         public PlaneRecognizer(IARProvider arProvider, PlaceholderFactory<Mesh, PlaneView> planeFactory)
         {
@@ -76,10 +79,32 @@ namespace PlaneMeshing.Aggregates
             {
                 for (int j = 0; j < meshes.Length; j++)
                 {
-                    var triangles = MeshingUtility.GetInsideVertices(meshes[j], planes[i].Center, planes[i].Extends, planes[i].Rotation);
-                    if (triangles.Length == 0) continue;
+                    var originVertices = new NativeArray<Vector3>(meshes[j].vertices, Allocator.TempJob);
+                    var originTriangles = new NativeArray<int>(meshes[j].triangles, Allocator.TempJob);
+                    var triangles = new NativeArray<bool>(meshes[j].triangles.Length, Allocator.TempJob);
+
+                    var job = new SearchTrianglesJob()
+                    {
+                        ValidCount = 0,
+                        Vertices = originVertices,
+                        Triangles = originTriangles,
+                        ValidateTriangles = triangles,
+                        AreaBounce = planes[i].Extends,
+                        AreaCenter = planes[i].Center,
+                        PlaneRotation = planes[i].Rotation,
+                        PlaneOrientations = PlaneOrientation.Horizontal
+                    };
+
+                    var handle = job.Schedule(meshes[j].triangles.Length, 3);
+                    handle.Complete();
+
+                    var validCount = triangles.Count(x => x);
                     
-                    var data = GetMeshData(Mesh.AllocateWritableMeshData(1), triangles, new NativeArray<Vector3>(meshes[j].vertices, Allocator.TempJob));
+                    if (validCount == 0) continue;
+
+                    var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
+
+                    var data = GetMeshData(Mesh.AllocateWritableMeshData(1), validTriangles, new NativeArray<Vector3>(meshes[j].vertices, Allocator.TempJob));
                     
                     CreateMesh(data);
                 }
