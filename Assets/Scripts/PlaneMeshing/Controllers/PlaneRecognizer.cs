@@ -35,7 +35,7 @@ namespace PlaneMeshing.Aggregates
 
         public void Initialize()
         {
-            // StartRecognizer();
+            StartRecognizer();
         }
 
         public void StartRecognizer()
@@ -45,23 +45,8 @@ namespace PlaneMeshing.Aggregates
                 .Subscribe(_ =>
                 {
                     _semaphore.WaitOne();
-                    var meshes = _arProvider.Meshes.ToArray();
-                    var positions = _arProvider.MeshPositions.ToArray();
-                    var planes = _arProvider.Planes;
                     
-                    if (meshes.Length == 0 || planes.IsEmpty()) return;
-
-                    var plane = planes.First();
-                    
-                    for (int i = 0; i < meshes.Length; i++)
-                    {
-                        // var triangles = MeshingUtility.CheckInsideVertices(meshes[i], plane.Center, plane.Extends);
-                        // if (triangles.Item1 == 0) continue;
-                        // Debug.Log(triangles.Item1);
-                        // CreatePlaneMesh(meshes[i].vertices, meshes[i].triangles );
-                        // DeleteTriangles(meshes[i], triangles.Item2.ToArray());
-                        // break;
-                    }
+                    Recognize();
 
                     _semaphore.Release();
                 })
