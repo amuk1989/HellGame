@@ -10,7 +10,6 @@ namespace PlaneMeshing.Jobs
     [BurstCompile]
     public struct SearchTrianglesJob: IJobParallelForBatch
     {
-        public int ValidCount;
         public NativeArray<bool> ValidateTriangles;
         [ReadOnly] public NativeArray<Vector3> Vertices;
         [ReadOnly] public NativeArray<int> Triangles;
@@ -28,13 +27,12 @@ namespace PlaneMeshing.Jobs
 
             for (int i = index; i < index + count; i++)
             {
-                if (!MeshingUtility.IsInsidePoint(Vertices[Triangles[i]], AreaCenter, AreaBounce, PlaneRotation)) return;
+                if (!MeshingUtility.IsInsidePoint(Vertices[Triangles[i]], AreaCenter, AreaBounce, PlaneRotation, PlaneOrientations)) return;
             }
 
             for (int i = index; i < index+count; i++)
             {
                 ValidateTriangles[i] = true;
-                ValidCount++;
             }
         }
     }

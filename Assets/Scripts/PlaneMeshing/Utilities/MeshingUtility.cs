@@ -33,8 +33,6 @@ namespace PlaneMeshing.Utilities
             if (math.abs(point.y - bounceCenter.y) > 0.1f &&
                 orientation == PlaneOrientation.Horizontal) return false;
 
-            point.y = bounceCenter.y;
-
             var rect = GetRectData(bounceCenter, bounceSize, rotation);
 
             var pab = TriangleArea(point,rect.A,rect.B);
@@ -92,7 +90,7 @@ namespace PlaneMeshing.Utilities
 
     public enum PlaneOrientation
     {
-        Horizontal,
-        Vertical
+        Horizontal = 1,
+        Vertical = 2
     }
 }

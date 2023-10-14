@@ -85,14 +85,13 @@ namespace PlaneMeshing.Aggregates
 
                     var job = new SearchTrianglesJob()
                     {
-                        ValidCount = 0,
                         Vertices = originVertices,
                         Triangles = originTriangles,
                         ValidateTriangles = triangles,
                         AreaBounce = planes[i].Extends,
                         AreaCenter = planes[i].Center,
                         PlaneRotation = planes[i].Rotation,
-                        PlaneOrientations = PlaneOrientation.Horizontal
+                        PlaneOrientations = planes[i].PlaneOrientation
                     };
 
                     var handle = job.Schedule(meshes[j].triangles.Length, 3);
