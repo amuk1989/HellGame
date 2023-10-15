@@ -1,5 +1,6 @@
 ﻿using System;
 using AR.Interfaces;
+using Scanning.Interfaces;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,20 +15,26 @@ namespace UI.Views
         }
 
         [SerializeField] private Button _startGameButton;
+        [SerializeField] private Button _stopScanButton;
 
-        private IARService _arService;
+        private IScanningService _scanningService;
 
         [Inject]
-        private void Construct(IARService arService)
+        private void Construct(IScanningService scanningService)
         {
-            _arService = arService;
+            _scanningService = scanningService;
         }
 
         private void Start()
         {
             _startGameButton
                 .OnClickAsObservable()
-                .Subscribe(_ => _arService.Initialize())
+                .Subscribe(_ => _scanningService.AsyncScanningTask())
+                .AddTo(this);
+            
+            _stopScanButton
+                .OnClickAsObservable()
+                .Subscribe(_ => _scanningService.AsyncScanningTask())
                 .AddTo(this);
         }
 

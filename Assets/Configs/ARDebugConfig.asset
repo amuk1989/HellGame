@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d68156e5a49c4473a4256efcb40affe4, type: 3}
+  m_Name: ARDebugConfig
+  m_EditorClassIdentifier: 
+  _anchorView: {fileID: -8592731557625414857, guid: 9095a0fdc461e5d48b78ff62f2584351, type: 3}

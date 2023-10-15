@@ -1,5 +1,7 @@
 ﻿using AR.Aggregates;
+using AR.Data;
 using AR.Interfaces;
+using AR.Repositories;
 using AR.Services;
 using AR.View;
 using Utility;
@@ -9,11 +11,18 @@ namespace AR.Bootstrap
 {
     public class ARInstaller: Installer
     {
+        private ARDebugConfig _arDebugConfig;
+
+        [Inject]
+        private void Construct([InjectOptional]ARDebugConfig arDebugConfig)
+        {
+            _arDebugConfig = arDebugConfig;
+        }
+        
         public override void InstallBindings()
         {
             Container
-                .Bind<IARService>()
-                .To<ARService>()
+                .BindInterfacesTo<ARService>()
                 .AsSingle()
                 .NonLazy();
 
@@ -26,9 +35,30 @@ namespace AR.Bootstrap
                 .FromComponentInNewPrefabResource(Consts.ARMesh);
 
             Container
-                .BindInterfacesAndSelfTo<ARAggregate>()
+                .BindInterfacesAndSelfTo<ARController>()
                 .AsSingle()
                 .NonLazy();
+
+            Container
+                .Bind<ARPlaneRepository>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
+                .BindInterfacesAndSelfTo<ARMeshRepository>()
+                .AsSingle()
+                .NonLazy();
+            
+            if (_arDebugConfig == null) return;
+
+            Container
+                .BindInterfacesTo<ARDebugger>()
+                .AsSingle()
+                .NonLazy();
+
+            Container
+                .BindFactory<AnchorView, PlaceholderFactory<AnchorView>>()
+                .FromComponentInNewPrefab(_arDebugConfig.AnchorView);
         }
     }
 }

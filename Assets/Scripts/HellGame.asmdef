@@ -4,7 +4,12 @@
     "references": [
         "Zenject",
         "UniRx",
-        "ARDK"
+        "ARDK",
+        "Unity.Mathematics",
+        "UniTask",
+        "Unity.Collections",
+        "Unity.TextMeshPro",
+        "Unity.Burst"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

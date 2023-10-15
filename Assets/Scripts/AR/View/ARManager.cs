@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Niantic.ARDK.Extensions;
+using UnityEngine;
 using Zenject;
 
 namespace AR.View
@@ -8,5 +9,9 @@ namespace AR.View
         internal class ARFactory: PlaceholderFactory<ARManager>
         {
         }
+        
+        [SerializeField] private ARSessionManager _sessionManager;
+            
+        public ARSessionManager SessionManager => _sessionManager;
     }
 }
