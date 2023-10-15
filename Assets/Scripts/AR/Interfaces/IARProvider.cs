@@ -10,9 +10,9 @@ namespace AR.Interfaces
     {
         public IObservable<PlaneData> OnPlaneUpdated { get; }
         public IObservable<PlaneData> OnPlaneRemoved { get; }
-        public IObservable<Unit> OnMeshUpdated { get; }
         public IReadOnlyList<PlaneData> Planes { get; }
         public IEnumerable<Mesh> Meshes { get; }
-        public IEnumerable<Vector3> MeshPositions { get; }
+        public IObservable<UpdatedMeshData> OnMeshUpdated { get; }
+        public IObservable<UpdatedMeshData> OnMeshRemoved { get; }
     }
 }

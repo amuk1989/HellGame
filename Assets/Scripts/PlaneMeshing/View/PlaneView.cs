@@ -5,7 +5,7 @@ using Zenject;
 namespace PlaneMeshing.View
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    public class PlaneView: MonoBehaviour
+    public class PlaneView: MonoBehaviour, IDisposable
     {
         [SerializeField] private MeshFilter _meshFilter;
 
@@ -26,6 +26,11 @@ namespace PlaneMeshing.View
 #endif
             _meshFilter.mesh = _mesh;
             gameObject.name = _mesh.name;
+        }
+
+        public void Dispose()
+        {
+            Destroy(gameObject);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace PlaneMeshing.View
             
             _testButton
                 .OnClickAsObservable()
-                .Subscribe(_ => _planeRecognizer.Recognize())
+                .Subscribe(_ => _planeRecognizer.StartRecognizer())
                 .AddTo(this);
 
             _arProvider

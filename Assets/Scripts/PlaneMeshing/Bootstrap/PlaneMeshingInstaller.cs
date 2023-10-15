@@ -1,5 +1,6 @@
 ﻿using PlaneMeshing.Aggregates;
 using PlaneMeshing.Factories;
+using PlaneMeshing.Repositories;
 using PlaneMeshing.View;
 using UnityEngine;
 using Zenject;
@@ -18,6 +19,11 @@ namespace PlaneMeshing.Bootstrap
             Container
                 .BindFactory<Mesh, PlaneView, PlaceholderFactory<Mesh, PlaneView>>()
                 .FromFactory<PlaneFactory>();
+
+            Container
+                .BindInterfacesAndSelfTo<PlaneMeshRepository>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

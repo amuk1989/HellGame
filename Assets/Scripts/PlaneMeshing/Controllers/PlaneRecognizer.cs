@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using AR.Data;
 using AR.Interfaces;
 using ModestTree;
 using PlaneMeshing.Jobs;
+using PlaneMeshing.Repositories;
 using PlaneMeshing.Utilities;
 using PlaneMeshing.View;
 using UniRx;
 using Unity.Collections;
 using Unity.Jobs;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Zenject;
@@ -23,14 +24,17 @@ namespace PlaneMeshing.Aggregates
 
         private readonly IARProvider _arProvider;
         private readonly PlaceholderFactory<Mesh, PlaneView> _planeFactory;
+        private readonly PlaneMeshRepository _planeMeshRepository;
 
         private readonly Semaphore _semaphore = new Semaphore(1,1);
         private JobHandle _jobHandle;
 
-        public PlaneRecognizer(IARProvider arProvider, PlaceholderFactory<Mesh, PlaneView> planeFactory)
+        private PlaneRecognizer(IARProvider arProvider, PlaceholderFactory<Mesh, PlaneView> planeFactory, 
+            PlaneMeshRepository planeMeshRepository)
         {
             _arProvider = arProvider;
             _planeFactory = planeFactory;
+            _planeMeshRepository = planeMeshRepository;
         }
 
         public void Initialize()
@@ -42,18 +46,18 @@ namespace PlaneMeshing.Aggregates
         {
             _arProvider
                 .OnMeshUpdated
-                .Subscribe(_ =>
+                .Subscribe(meshData =>
                 {
                     _semaphore.WaitOne();
                     
-                    Recognize();
+                    Recognize(meshData);
 
                     _semaphore.Release();
                 })
                 .AddTo(_compositeDisposable);
         }
 
-        public void Recognize()
+        private void Recognize(UpdatedMeshData meshData)
         {
             var meshes = _arProvider.Meshes.ToArray();
             var planes = _arProvider.Planes;
@@ -62,11 +66,11 @@ namespace PlaneMeshing.Aggregates
 
             for (int i = 0; i < planes.Count; i++)
             {
-                for (int j = 0; j < meshes.Length; j++)
+                // for (int j = 0; j < meshes.Length; j++)
                 {
-                    var originVertices = new NativeArray<Vector3>(meshes[j].vertices, Allocator.TempJob);
-                    var originTriangles = new NativeArray<int>(meshes[j].triangles, Allocator.TempJob);
-                    var triangles = new NativeArray<bool>(meshes[j].triangles.Length, Allocator.TempJob);
+                    var originVertices = new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob);
+                    var originTriangles = new NativeArray<int>(meshData.Mesh.triangles, Allocator.TempJob);
+                    var triangles = new NativeArray<bool>(meshData.Mesh.triangles.Length, Allocator.TempJob);
 
                     var job = new SearchTrianglesJob()
                     {
@@ -79,7 +83,7 @@ namespace PlaneMeshing.Aggregates
                         PlaneOrientations = planes[i].PlaneOrientation
                     };
 
-                    var handle = job.Schedule(meshes[j].triangles.Length, 3);
+                    var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
                     handle.Complete();
 
                     var validCount = triangles.Count(x => x);
@@ -88,9 +92,9 @@ namespace PlaneMeshing.Aggregates
 
                     var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
 
-                    var data = GetMeshData(Mesh.AllocateWritableMeshData(1), validTriangles, new NativeArray<Vector3>(meshes[j].vertices, Allocator.TempJob));
+                    var data = GetMeshData(Mesh.AllocateWritableMeshData(1), validTriangles, new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob));
                     
-                    CreateMesh(data);
+                    CreateMesh(meshData.Id,data);
                 }
             }
         }
@@ -123,7 +127,7 @@ namespace PlaneMeshing.Aggregates
             return dataArray;
         }
 
-        private void CreateMesh(Mesh.MeshDataArray dataArray)
+        private void CreateMesh(Vector3Int id, Mesh.MeshDataArray dataArray)
         {
             var mesh = new Mesh();
             
@@ -132,7 +136,8 @@ namespace PlaneMeshing.Aggregates
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
 
-            _planeFactory.Create(mesh);
+            // _planeFactory.Create(mesh);
+            _planeMeshRepository.AddPlane(id, mesh);
         }
 
         public void StopRecognizer()

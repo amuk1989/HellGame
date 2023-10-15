@@ -45,7 +45,7 @@ namespace AR.Bootstrap
                 .NonLazy();
             
             Container
-                .Bind<ARMeshRepository>()
+                .BindInterfacesAndSelfTo<ARMeshRepository>()
                 .AsSingle()
                 .NonLazy();
             
