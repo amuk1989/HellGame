@@ -12,10 +12,8 @@ namespace AR.Repositories
     internal class ARMeshRepository: IInitializable
     {
         private readonly ReactiveDictionary<Vector3Int, Mesh> _meshes = new();
-        private readonly Dictionary<Vector3Int, Vector3> _meshGlobalPositions = new();
 
         public IEnumerable<Mesh> Meshes => _meshes.Values;
-        public IEnumerable<Vector3> MeshGlobalPositions => _meshGlobalPositions.Values;
         public IObservable<UpdatedMeshData> OnMeshUpdated { get; private set; }
         public IObservable<UpdatedMeshData> OnMeshRemoved { get; private set; }
 
@@ -40,19 +38,23 @@ namespace AR.Repositories
             foreach (var block in args.BlocksObsoleted)
             {
                 if (!_meshes.ContainsKey(block)) continue;
+                _meshes[block].Clear();
                 _meshes.Remove(block);
-                _meshGlobalPositions.Remove(block);
             }
             
             foreach (var block in args.BlocksUpdated)
             {
                 _meshes[block] = args.Mesh.Blocks[block].Mesh;
-                _meshGlobalPositions[block] = new Vector3(block.x * 1.4f, block.y * -1.4f, block.z * 1.4f);
             }
         }
         
         internal void ClearMeshes(MeshBlocksClearedArgs args)
         {
+            foreach (var mesh in _meshes)
+            {
+                mesh.Value.Clear();
+            }
+
             _meshes.Clear();
         }
     }

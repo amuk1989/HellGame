@@ -23,17 +23,14 @@ namespace PlaneMeshing.Aggregates
         private readonly CompositeDisposable _compositeDisposable = new();
 
         private readonly IARProvider _arProvider;
-        private readonly PlaceholderFactory<Mesh, PlaneView> _planeFactory;
         private readonly PlaneMeshRepository _planeMeshRepository;
 
         private readonly Semaphore _semaphore = new Semaphore(1,1);
         private JobHandle _jobHandle;
 
-        private PlaneRecognizer(IARProvider arProvider, PlaceholderFactory<Mesh, PlaneView> planeFactory, 
-            PlaneMeshRepository planeMeshRepository)
+        private PlaneRecognizer(IARProvider arProvider, PlaneMeshRepository planeMeshRepository)
         {
             _arProvider = arProvider;
-            _planeFactory = planeFactory;
             _planeMeshRepository = planeMeshRepository;
         }
 
@@ -55,47 +52,46 @@ namespace PlaneMeshing.Aggregates
                     _semaphore.Release();
                 })
                 .AddTo(_compositeDisposable);
+
+            _arProvider
+                .OnMeshRemoved
+                .Subscribe(meshData => _planeMeshRepository.RemovePlane(meshData.Id))
+                .AddTo(_compositeDisposable);
         }
 
         private void Recognize(UpdatedMeshData meshData)
         {
-            var meshes = _arProvider.Meshes.ToArray();
             var planes = _arProvider.Planes;
-                    
-            if (meshes.Length == 0 || planes.IsEmpty()) return;
 
             for (int i = 0; i < planes.Count; i++)
             {
-                // for (int j = 0; j < meshes.Length; j++)
+                var originVertices = new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob);
+                var originTriangles = new NativeArray<int>(meshData.Mesh.triangles, Allocator.TempJob);
+                var triangles = new NativeArray<bool>(meshData.Mesh.triangles.Length, Allocator.TempJob);
+
+                var job = new SearchTrianglesJob()
                 {
-                    var originVertices = new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob);
-                    var originTriangles = new NativeArray<int>(meshData.Mesh.triangles, Allocator.TempJob);
-                    var triangles = new NativeArray<bool>(meshData.Mesh.triangles.Length, Allocator.TempJob);
+                    Vertices = originVertices,
+                    Triangles = originTriangles,
+                    ValidateTriangles = triangles,
+                    AreaBounce = planes[i].Extends,
+                    AreaCenter = planes[i].Center,
+                    PlaneRotation = planes[i].Rotation,
+                    PlaneOrientations = planes[i].PlaneOrientation
+                };
 
-                    var job = new SearchTrianglesJob()
-                    {
-                        Vertices = originVertices,
-                        Triangles = originTriangles,
-                        ValidateTriangles = triangles,
-                        AreaBounce = planes[i].Extends,
-                        AreaCenter = planes[i].Center,
-                        PlaneRotation = planes[i].Rotation,
-                        PlaneOrientations = planes[i].PlaneOrientation
-                    };
+                var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
+                handle.Complete();
 
-                    var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
-                    handle.Complete();
-
-                    var validCount = triangles.Count(x => x);
+                var validCount = triangles.Count(x => x);
                     
-                    if (validCount == 0) continue;
+                if (validCount == 0) continue;
 
-                    var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
+                var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
 
-                    var data = GetMeshData(Mesh.AllocateWritableMeshData(1), validTriangles, new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob));
+                var data = GetMeshData(Mesh.AllocateWritableMeshData(1), validTriangles, new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob));
                     
-                    CreateMesh(meshData.Id,data);
-                }
+                CreateMesh(meshData.Id,data);
             }
         }
 
@@ -135,8 +131,7 @@ namespace PlaneMeshing.Aggregates
             
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
-
-            // _planeFactory.Create(mesh);
+            
             _planeMeshRepository.AddPlane(id, mesh);
         }
 

@@ -78,7 +78,6 @@ namespace AR.Services
         public IObservable<UpdatedMeshData> OnMeshRemoved => _arMeshRepository.OnMeshRemoved;
         public IReadOnlyList<PlaneData> Planes => _arPlaneRepository.Planes;
         public IEnumerable<Mesh> Meshes => _arMeshRepository.Meshes;
-        public IEnumerable<Vector3> MeshPositions => _arMeshRepository.MeshGlobalPositions;
 
         private void AddPlane(AnchorsArgs args)
         {

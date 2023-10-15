@@ -22,5 +22,11 @@ namespace PlaneMeshing.Repositories
 
             _planeMeshes[id] = _planeFactory.Create(plane);
         }
+
+        internal void RemovePlane(Vector3Int id)
+        {
+            if (!_planeMeshes.ContainsKey(id)) return;
+            _planeMeshes.Remove(id);
+        }
     }
 }

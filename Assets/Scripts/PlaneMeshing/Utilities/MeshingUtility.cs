@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using PlaneMeshing.Data;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Mathematics;
-using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace PlaneMeshing.Utilities
 {
