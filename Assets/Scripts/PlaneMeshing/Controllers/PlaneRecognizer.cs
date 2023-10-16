@@ -83,13 +83,28 @@ namespace PlaneMeshing.Aggregates
                 var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
                 handle.Complete();
 
+                var antiAliasingJob = new AntialiasingPlaneJob()
+                {
+                    PlaneRotation = planes[i].Rotation,
+#if UNITY_EDITOR
+                    PlaneYPosition = -planes[i].Center.y,
+                    #else
+                    PlaneYPosition = planes[i].Center.y,
+#endif
+
+                    Vertices = originVertices
+                };
+
+                var antiAliasingHandle = antiAliasingJob.Schedule(originVertices.Length, 64);
+                antiAliasingHandle.Complete();
+
                 var validCount = triangles.Count(x => x);
                     
                 if (validCount == 0) continue;
 
                 var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
 
-                var data = GetMeshData(Mesh.AllocateWritableMeshData(1), validTriangles, new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob));
+                var data = GetMeshData(Mesh.AllocateWritableMeshData(1), validTriangles, new NativeArray<Vector3>(originVertices, Allocator.TempJob));
                     
                 CreateMesh(meshData.Id,data);
             }

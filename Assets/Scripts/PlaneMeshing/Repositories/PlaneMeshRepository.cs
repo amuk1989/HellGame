@@ -7,7 +7,7 @@ namespace PlaneMeshing.Repositories
 {
     internal class PlaneMeshRepository
     {
-        private Dictionary<Vector3Int, PlaneView> _planeMeshes = new();
+        private readonly Dictionary<Vector3Int, PlaneView> _planeMeshes = new();
 
         private readonly PlaceholderFactory<Mesh, PlaneView> _planeFactory;
 
