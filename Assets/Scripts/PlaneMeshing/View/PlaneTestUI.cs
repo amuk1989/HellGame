@@ -1,6 +1,7 @@
 ﻿using System;
 using AR.Interfaces;
 using PlaneMeshing.Aggregates;
+using PlaneMeshing.Interfaces;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -14,11 +15,11 @@ namespace PlaneMeshing.View
         [SerializeField] private Button _testButton;
         [SerializeField] private TMP_Text _text; 
 
-        private PlaneRecognizer _planeRecognizer;
+        private IPlaneRecognizer _planeRecognizer;
         private IARProvider _arProvider;
 
         [Inject]
-        private void Construct(PlaneRecognizer planeRecognizer, IARProvider arProvider)
+        private void Construct(IPlaneRecognizer planeRecognizer, IARProvider arProvider)
         {
             _planeRecognizer = planeRecognizer;
             _arProvider = arProvider;

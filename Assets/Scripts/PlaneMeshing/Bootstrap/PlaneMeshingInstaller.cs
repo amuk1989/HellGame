@@ -12,7 +12,7 @@ namespace PlaneMeshing.Bootstrap
         public override void InstallBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<PlaneRecognizer>()
+                .BindInterfacesTo<PlaneRecognizer>()
                 .AsSingle()
                 .NonLazy();
             
