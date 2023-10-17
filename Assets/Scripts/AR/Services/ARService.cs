@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AR.Aggregates;
 using AR.Data;
 using AR.Interfaces;
+using AR.Models;
 using AR.Repositories;
 using Niantic.ARDK.AR.Anchors;
 using Niantic.ARDK.AR.ARSessionEventArgs;
@@ -27,6 +28,12 @@ namespace AR.Services
         }
 
         public bool IsInitialized => _controller.ARSession != null;
+        public IObservable<PlaneModel> OnPlaneRemoved => _arPlaneRepository.OnPlaneRemoved;
+        public IObservable<UpdatedMeshData> OnMeshUpdated => _arMeshRepository.OnMeshUpdated;
+        public IObservable<UpdatedMeshData> OnMeshRemoved => _arMeshRepository.OnMeshRemoved;
+        public IReadOnlyList<PlaneModel> Planes => _arPlaneRepository.Planes;
+        public IEnumerable<Mesh> Meshes => _arMeshRepository.Meshes;
+        public IObservable<PlaneModel> OnPlaneUpdated => _arPlaneRepository.OnPlaneUpdated.Merge(_arPlaneRepository.OnPlaneAdded);
 
         public void Initialize()
         {
@@ -68,16 +75,6 @@ namespace AR.Services
         {
             StopCollection();
         }
-
-        public IObservable<PlaneData> OnPlaneUpdated => _arPlaneRepository
-            .OnPlaneUpdated
-            .Merge(_arPlaneRepository.OnPlaneAdded);
-
-        public IObservable<PlaneData> OnPlaneRemoved => _arPlaneRepository.OnPlaneRemoved;
-        public IObservable<UpdatedMeshData> OnMeshUpdated => _arMeshRepository.OnMeshUpdated;
-        public IObservable<UpdatedMeshData> OnMeshRemoved => _arMeshRepository.OnMeshRemoved;
-        public IReadOnlyList<PlaneData> Planes => _arPlaneRepository.Planes;
-        public IEnumerable<Mesh> Meshes => _arMeshRepository.Meshes;
 
         private void AddPlane(AnchorsArgs args)
         {

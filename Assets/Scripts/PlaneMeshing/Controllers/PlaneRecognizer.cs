@@ -13,6 +13,7 @@ using PlaneMeshing.View;
 using UniRx;
 using Unity.Collections;
 using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Zenject;
@@ -75,10 +76,10 @@ namespace PlaneMeshing.Aggregates
                     Vertices = originVertices,
                     Triangles = originTriangles,
                     ValidateTriangles = triangles,
-                    AreaBounce = planes[i].Extends,
-                    AreaCenter = planes[i].Center,
-                    PlaneRotation = planes[i].Rotation,
-                    PlaneOrientations = planes[i].PlaneOrientation
+                    AreaBounce = planes[i].PlaneData.Extends,
+                    AreaCenter = planes[i].PlaneData.Center,
+                    PlaneRotation = planes[i].PlaneData.Rotation,
+                    PlaneOrientations = planes[i].PlaneData.PlaneOrientation
                 };
 
                 var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
@@ -86,11 +87,11 @@ namespace PlaneMeshing.Aggregates
 
                 var antiAliasingJob = new AntialiasingPlaneJob()
                 {
-                    PlaneRotation = planes[i].Rotation,
+                    PlaneRotation = planes[i].PlaneData.Rotation,
 #if UNITY_EDITOR
-                    PlaneYPosition = -planes[i].Center.y,
+                    PlanePosition = planes[i].PlaneData.Center * new float3(1,-1,1),
                     #else
-                    PlaneYPosition = planes[i].Center.y,
+                    PlanePosition = planes[i].PlaneData.Center,
 #endif
 
                     Vertices = originVertices
@@ -104,9 +105,7 @@ namespace PlaneMeshing.Aggregates
                 if (validCount == 0) continue;
 
                 var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
-
-                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob));
-
+                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(originVertices, Allocator.TempJob));
                 var planeMesh = CreateMesh(data);
 
                 _planeMeshRepository.AddPlane(meshData.Id, planeMesh);

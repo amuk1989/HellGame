@@ -33,11 +33,6 @@ namespace PlaneMeshing.View
                 .OnClickAsObservable()
                 .Subscribe(_ => _planeRecognizer.StartRecognizer())
                 .AddTo(this);
-
-            _arProvider
-                .OnPlaneUpdated
-                .Subscribe(plane => _text.text += $"Plane id {plane.ID} {plane.Center}, {plane.Extends}{Environment.NewLine}")
-                .AddTo(this);
         }
     }
 }
