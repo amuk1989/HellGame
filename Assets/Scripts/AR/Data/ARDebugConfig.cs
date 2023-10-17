@@ -7,7 +7,6 @@ namespace AR.Data
     public class ARDebugConfig : ScriptableObject
     {
         [SerializeField] private AnchorView _anchorView;
-        // [SerializeField] private 
         [SerializeField] private bool _showConsole;
 
         public AnchorView AnchorView => _anchorView;

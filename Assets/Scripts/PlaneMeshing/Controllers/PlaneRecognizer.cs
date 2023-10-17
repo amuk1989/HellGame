@@ -5,6 +5,7 @@ using System.Threading;
 using AR.Data;
 using AR.Interfaces;
 using ModestTree;
+using PlaneMeshing.Interfaces;
 using PlaneMeshing.Jobs;
 using PlaneMeshing.Repositories;
 using PlaneMeshing.Utilities;
@@ -18,7 +19,7 @@ using Zenject;
 
 namespace PlaneMeshing.Aggregates
 {
-    public class PlaneRecognizer: IInitializable
+    public class PlaneRecognizer: IInitializable, IPlaneRecognizer
     {
         private readonly CompositeDisposable _compositeDisposable = new();
 
@@ -89,14 +90,17 @@ namespace PlaneMeshing.Aggregates
 
                 var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
 
-                var data = GetMeshData(Mesh.AllocateWritableMeshData(1), validTriangles, new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob));
+                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob));
                     
-                CreateMesh(meshData.Id,data);
+                var planeMesh = CreateMesh(data);
+
+                _planeMeshRepository.AddPlane(meshData.Id, planeMesh);
             }
         }
 
-        private static Mesh.MeshDataArray GetMeshData(Mesh.MeshDataArray dataArray, NativeArray<int> triangles, NativeArray<Vector3> vertices)
+        private static Mesh.MeshDataArray GetMeshData(NativeArray<int> triangles, NativeArray<Vector3> vertices)
         {
+            var dataArray = Mesh.AllocateWritableMeshData(1);
             var data = dataArray[0];
             
             data.SetVertexBufferParams(vertices.Length,
@@ -123,7 +127,7 @@ namespace PlaneMeshing.Aggregates
             return dataArray;
         }
 
-        private void CreateMesh(Vector3Int id, Mesh.MeshDataArray dataArray)
+        private Mesh CreateMesh(Mesh.MeshDataArray dataArray)
         {
             var mesh = new Mesh();
             
@@ -131,8 +135,8 @@ namespace PlaneMeshing.Aggregates
             
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
-            
-            _planeMeshRepository.AddPlane(id, mesh);
+
+            return mesh;
         }
 
         public void StopRecognizer()
