@@ -106,7 +106,7 @@ namespace PlaneMeshing.Aggregates
                 var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
 
                 var data = GetMeshData(validTriangles, new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob));
-                    
+
                 var planeMesh = CreateMesh(data);
 
                 _planeMeshRepository.AddPlane(meshData.Id, planeMesh);
