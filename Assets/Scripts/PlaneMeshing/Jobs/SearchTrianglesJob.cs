@@ -15,8 +15,8 @@ namespace PlaneMeshing.Jobs
         [ReadOnly] public NativeArray<int> Triangles;
         [ReadOnly] public float3 AreaCenter;
         [ReadOnly] public float3 AreaBounce;
-        [ReadOnly] public PlaneOrientation PlaneOrientations;
         [ReadOnly] public quaternion PlaneRotation;
+        [ReadOnly] public float TrashHold;
 
         public void Execute(int index, int count)
         {
@@ -27,7 +27,7 @@ namespace PlaneMeshing.Jobs
 
             for (int i = index; i < index + count; i++)
             {
-                if (!MeshingUtility.IsInsidePoint(Vertices[Triangles[i]], AreaCenter, AreaBounce, PlaneRotation, PlaneOrientations)) return;
+                if (!MeshingUtility.IsInsidePoint(Vertices[Triangles[i]], AreaCenter, AreaBounce, PlaneRotation, TrashHold)) return;
             }
 
             for (int i = index; i < index+count; i++)

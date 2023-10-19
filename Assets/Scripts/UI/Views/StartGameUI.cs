@@ -34,7 +34,7 @@ namespace UI.Views
             
             _stopScanButton
                 .OnClickAsObservable()
-                .Subscribe(_ => _scanningService.AsyncScanningTask())
+                .Subscribe(_ => _scanningService.StopScanning())
                 .AddTo(this);
         }
 

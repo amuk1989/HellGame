@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using AR.Data;
+using AR.Factories;
+using AR.Models;
 using Niantic.ARDK.AR.Anchors;
 using Niantic.ARDK.Utilities;
 using PlaneMeshing.Utilities;
@@ -11,29 +13,38 @@ namespace AR.Repositories
 {
     public class ARPlaneRepository
     {
-        private readonly ReactiveDictionary<string, PlaneData> _planes = new();
-        
-        public IReadOnlyList<PlaneData> Planes => _planes.Values.ToList();
+        private readonly ReactiveDictionary<string, PlaneModel> _planes = new();
 
-        public IObservable<PlaneData> OnPlaneAdded => _planes.ObserveAdd().AsObservable().Select(x=> x.Value);
-        public IObservable<PlaneData> OnPlaneRemoved => _planes.ObserveRemove().AsObservable().Select(x=> x.Value);
-        public IObservable<PlaneData> OnPlaneUpdated => _planes.ObserveReplace().AsObservable().Select(x=> x.NewValue);
+        private readonly PlaneModel.Factory _modelFactory;
+
+        public ARPlaneRepository(PlaneModel.Factory modelFactory)
+        {
+            _modelFactory = modelFactory;
+        }
+
+        public IReadOnlyList<PlaneModel> Planes => _planes.Values.ToList();
+        public IObservable<PlaneModel> OnPlaneAdded => _planes.ObserveAdd().AsObservable().Select(x=> x.Value);
+        public IObservable<PlaneModel> OnPlaneUpdated => _planes.ObserveReplace().AsObservable().Select(x=> x.NewValue);
+        public IObservable<PlaneModel> OnPlaneRemoved => _planes.ObserveRemove().AsObservable().Select(x=> x.Value);
 
         public void AddPlane(string id, IARPlaneAnchor planeAnchor)
         {
-            _planes[id] = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id, 
+            var data = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id, 
                 planeAnchor.Transform.ToRotation(), (PlaneOrientation)planeAnchor.Alignment);
+            _planes[id] = _modelFactory.Create(data);
         }
         
         public void UpdatePlane(string id, IARPlaneAnchor planeAnchor)
         {
-            _planes[id] = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id,
+            var data = new PlaneData(planeAnchor.Transform.ToPosition(), planeAnchor.Extent, id,
                 planeAnchor.Transform.ToRotation(), (PlaneOrientation)planeAnchor.Alignment);
+            _planes[id].Update(data);
         }
 
         public void RemovePlane(string id)
         {
-            if (!_planes.ContainsKey(id)) return;
+            if (!_planes.TryGetValue(id, out var plane)) return;
+            plane.Dispose();
             _planes.Remove(id);
         }
     }

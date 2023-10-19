@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 743652ddfbd949c797332a2cec7070df, type: 3}
-  m_Name: ConfigRegistry
+  m_Script: {fileID: 11500000, guid: d40490d79981468f9e7ffc59211f3714, type: 3}
+  m_Name: PlaneMeshingConfig
   m_EditorClassIdentifier: 
-  _planeMeshingConfig: {fileID: 11400000, guid: 93adaf4049279d44f940604bd38ce7f9, type: 2}
+  _antialiasingTrashHold: 0.2

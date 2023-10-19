@@ -11,7 +11,9 @@ namespace AR.View
         }
         
         [SerializeField] private ARSessionManager _sessionManager;
+        [SerializeField] private Camera _arCamera;
             
         public ARSessionManager SessionManager => _sessionManager;
+        public Camera ARCamera => _arCamera;
     }
 }

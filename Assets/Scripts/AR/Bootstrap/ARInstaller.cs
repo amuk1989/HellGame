@@ -1,9 +1,12 @@
 ﻿using AR.Aggregates;
 using AR.Data;
+using AR.Factories;
 using AR.Interfaces;
+using AR.Models;
 using AR.Repositories;
 using AR.Services;
 using AR.View;
+using UnityEngine;
 using Utility;
 using Zenject;
 
@@ -48,6 +51,10 @@ namespace AR.Bootstrap
                 .BindInterfacesAndSelfTo<ARMeshRepository>()
                 .AsSingle()
                 .NonLazy();
+
+            Container
+                .BindFactory<PlaneData, PlaneModel, PlaneModel.Factory>()
+                .FromFactory<PlaneModelFactory>();
             
             if (_arDebugConfig == null) return;
 
@@ -57,8 +64,12 @@ namespace AR.Bootstrap
                 .NonLazy();
 
             Container
-                .BindFactory<AnchorView, PlaceholderFactory<AnchorView>>()
-                .FromComponentInNewPrefab(_arDebugConfig.AnchorView);
+                .BindFactory<PlaneModel, AnchorView, AnchorView.Factory>()
+                .FromFactory<AnchorViewFactory>();
+            
+            Container
+                .BindFactory<PlaneModel, AnchorDebugInfo, AnchorDebugInfo.Factory>()
+                .FromFactory<AnchorDebugInfoFactory>();
         }
     }
 }

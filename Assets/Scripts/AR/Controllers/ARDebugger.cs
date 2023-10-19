@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AR.Data;
 using AR.Interfaces;
 using AR.View;
 using UniRx;
@@ -9,32 +10,39 @@ namespace AR.Aggregates
 {
     internal class ARDebugger: IInitializable, IDisposable
     {
-        private readonly PlaceholderFactory<AnchorView> _anchorFactory;
+        private readonly AnchorView.Factory _anchorFactory;
+        private readonly AnchorDebugInfo.Factory _anchorInfoFactory;
         private readonly IARProvider _arProvider;
+        private readonly ARDebugConfig _arDebugConfig;
 
         private readonly Dictionary<string, AnchorView> _anchors = new();
         private readonly CompositeDisposable _compositeDisposable = new();
 
-        public ARDebugger(PlaceholderFactory<AnchorView> anchorFactory, IARProvider arProvider)
+        public ARDebugger(AnchorView.Factory anchorFactory, IARProvider arProvider, ARDebugConfig arDebugConfig,
+            AnchorDebugInfo.Factory anchorInfoFactory)
         {
             _anchorFactory = anchorFactory;
             _arProvider = arProvider;
+            _arDebugConfig = arDebugConfig;
+            _anchorInfoFactory = anchorInfoFactory;
         }
 
         public void Initialize()
+        {
+            if (_arDebugConfig.IsShownAnchorPlanes) SubscribeToAnchorsUpdating();
+        }
+
+        private void SubscribeToAnchorsUpdating()
         {
             _arProvider
                 .OnPlaneUpdated
                 .Subscribe(plane =>
                 {
-                    if (!_anchors.TryGetValue(plane.ID, out var anchor))
-                    {
-                        anchor = _anchorFactory.Create();
-                    }
+                    if (_anchors.ContainsKey(plane.PlaneData.ID)) return;
                     
-                    anchor.transform.SetPositionAndRotation(plane.Center, plane.Rotation);
-                    anchor.SetSize(plane.Extends);
-                    _anchors[plane.ID] = anchor;
+                    _anchors[plane.PlaneData.ID] = _anchorFactory.Create(plane);
+                    
+                    if (_arDebugConfig.IsShownAnchorInfo) _anchorInfoFactory.Create(plane);
                 })
                 .AddTo(_compositeDisposable);
             
@@ -42,10 +50,8 @@ namespace AR.Aggregates
                 .OnPlaneRemoved
                 .Subscribe(plane =>
                 {
-                    if (!_anchors.ContainsKey(plane.ID)) return;
-                    var view = _anchors[plane.ID];
-                    view.Dispose();
-                    _anchors.Remove(plane.ID);
+                    if (!_anchors.ContainsKey(plane.PlaneData.ID)) return;
+                    _anchors.Remove(plane.PlaneData.ID);
                 })
                 .AddTo(_compositeDisposable);
         }

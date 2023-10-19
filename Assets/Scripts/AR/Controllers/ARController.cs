@@ -7,6 +7,7 @@ using Niantic.ARDK.AR.ARSessionEventArgs;
 using Niantic.ARDK.AR.Configuration;
 using Niantic.ARDK.AR.Mesh;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace AR.Aggregates
@@ -30,6 +31,7 @@ namespace AR.Aggregates
 
         [CanBeNull] internal IARSession ARSession => _arManager?.SessionManager.ARSession;
         [CanBeNull] internal IARMesh ARMesh => _arManager?.SessionManager.ARSession.Mesh;
+        [CanBeNull] internal Camera ARCamera => _arManager?.ARCamera;
 
         public void Initialize()
         {
@@ -41,6 +43,11 @@ namespace AR.Aggregates
             _arMeshManager ??= _arMeshFactory.Create();
 
             _session = _arManager.SessionManager.ARSession;
+        }
+
+        internal void StopMeshing()
+        {
+            // _arMeshManager.Dispose();
         }
     }
 }

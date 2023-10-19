@@ -180,6 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sessionManager: {fileID: 3467419038823483522}
+  _arCamera: {fileID: 4021547217207552630}
 --- !u!114 &2710332166485862122
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -79,8 +79,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 1.394, y: -1.42, z: -0.594}
-  m_LocalScale: {x: 10, y: 7.692308, z: 15.384616}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3227255135289682881}
   m_Father: {fileID: 1996629073594359173}
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _timeToDiscovery: 1
   _meshSequencePath: Assets/Plugins/MockMeshes/LivingRoom/Pixel4a-LivingRoom
-  _updateInterval: 0.1
+  _updateInterval: 2
 --- !u!1 &2470140685735773884
 GameObject:
   m_ObjectHideFlags: 0

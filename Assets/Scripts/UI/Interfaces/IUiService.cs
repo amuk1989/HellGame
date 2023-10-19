@@ -1,9 +1,11 @@
-﻿using Zenject;
+﻿using UnityEngine;
+using Zenject;
 
 namespace UI.Interfaces
 {
     public interface IUiService: IInitializable
     {
         public void CreateStartMenu();
+        public void SetOnCanvas(RectTransform view);
     }
 }

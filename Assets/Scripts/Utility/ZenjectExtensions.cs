@@ -1,4 +1,6 @@
-﻿using Zenject;
+﻿using System.ComponentModel;
+using UnityEngine;
+using Zenject;
 
 namespace Utility
 {
@@ -10,6 +12,13 @@ namespace Utility
                 .BindInterfacesTo<TService>()
                 .AsSingle()
                 .NonLazy();
+        }
+        
+        public static void InstallRegistry<TRegistry>(this DiContainer container, TRegistry registry) where TRegistry: ScriptableObject
+        {
+            container
+                .Bind<TRegistry>()
+                .FromInstance(registry);
         }
     }
 }
