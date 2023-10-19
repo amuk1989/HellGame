@@ -98,8 +98,8 @@ namespace PlaneMeshing.Aggregates
                     #else
                     PlanePosition = planes[i].PlaneData.Center,
 #endif
-
-                    Vertices = originVertices
+                    Vertices = originVertices,
+                    Offset = _planeMeshingConfig.AntialiasingTrashHold
                 };
 
                 var antiAliasingHandle = antiAliasingJob.Schedule(originVertices.Length, 64);
