@@ -11,17 +11,20 @@ namespace AR.Aggregates
     internal class ARDebugger: IInitializable, IDisposable
     {
         private readonly AnchorView.Factory _anchorFactory;
+        private readonly AnchorDebugInfo.Factory _anchorInfoFactory;
         private readonly IARProvider _arProvider;
         private readonly ARDebugConfig _arDebugConfig;
 
         private readonly Dictionary<string, AnchorView> _anchors = new();
         private readonly CompositeDisposable _compositeDisposable = new();
 
-        public ARDebugger(AnchorView.Factory anchorFactory, IARProvider arProvider, ARDebugConfig arDebugConfig)
+        public ARDebugger(AnchorView.Factory anchorFactory, IARProvider arProvider, ARDebugConfig arDebugConfig,
+            AnchorDebugInfo.Factory anchorInfoFactory)
         {
             _anchorFactory = anchorFactory;
             _arProvider = arProvider;
             _arDebugConfig = arDebugConfig;
+            _anchorInfoFactory = anchorInfoFactory;
         }
 
         public void Initialize()
@@ -35,8 +38,11 @@ namespace AR.Aggregates
                 .OnPlaneUpdated
                 .Subscribe(plane =>
                 {
-                    if (!_anchors.ContainsKey(plane.PlaneData.ID)) return;
+                    if (_anchors.ContainsKey(plane.PlaneData.ID)) return;
+                    
                     _anchors[plane.PlaneData.ID] = _anchorFactory.Create(plane);
+                    
+                    if (_arDebugConfig.IsShownAnchorInfo) _anchorInfoFactory.Create(plane);
                 })
                 .AddTo(_compositeDisposable);
             

@@ -6,6 +6,7 @@ using AR.Models;
 using AR.Repositories;
 using AR.Services;
 using AR.View;
+using UnityEngine;
 using Utility;
 using Zenject;
 
@@ -65,6 +66,10 @@ namespace AR.Bootstrap
             Container
                 .BindFactory<PlaneModel, AnchorView, AnchorView.Factory>()
                 .FromFactory<AnchorViewFactory>();
+            
+            Container
+                .BindFactory<PlaneModel, AnchorDebugInfo, AnchorDebugInfo.Factory>()
+                .FromFactory<AnchorDebugInfoFactory>();
         }
     }
 }

@@ -50,6 +50,8 @@ namespace PlaneMeshing.Aggregates
                     _semaphore.WaitOne();
                     
                     Recognize(meshData);
+                    
+                    meshData.Mesh.Clear();
 
                     _semaphore.Release();
                 })

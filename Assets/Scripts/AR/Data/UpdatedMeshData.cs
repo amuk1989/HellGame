@@ -9,7 +9,7 @@ namespace AR.Data
 
         public UpdatedMeshData(Mesh mesh, Vector3Int id)
         {
-            Mesh = mesh;
+            Mesh = Object.Instantiate(mesh);
             Id = id;
         }
     }

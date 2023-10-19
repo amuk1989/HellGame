@@ -11,9 +11,9 @@ namespace AR.Repositories
 {
     internal class ARMeshRepository: IInitializable
     {
-        private readonly ReactiveDictionary<Vector3Int, Mesh> _meshes = new();
+        private readonly ReactiveDictionary<Vector3Int, UpdatedMeshData> _meshes = new();
 
-        public IEnumerable<Mesh> Meshes => _meshes.Values;
+        public IEnumerable<UpdatedMeshData> Meshes => _meshes.Values;
         public IObservable<UpdatedMeshData> OnMeshUpdated { get; private set; }
         public IObservable<UpdatedMeshData> OnMeshRemoved { get; private set; }
 
@@ -21,15 +21,15 @@ namespace AR.Repositories
         {
             OnMeshUpdated = _meshes
                 .ObserveAdd()
-                .Select(x => new UpdatedMeshData(x.Value, x.Key))
+                .Select(x => x.Value)
                 .Merge(_meshes
                         .ObserveReplace()
-                        .Select(x => new UpdatedMeshData(x.NewValue, x.Key)))
+                        .Select(x => x.NewValue))
                 .AsObservable();
 
             OnMeshRemoved = _meshes
                 .ObserveRemove()
-                .Select(x => new UpdatedMeshData(x.Value, x.Key))
+                .Select(x => x.Value)
                 .AsObservable();
         }
 
@@ -38,13 +38,13 @@ namespace AR.Repositories
             foreach (var block in args.BlocksObsoleted)
             {
                 if (!_meshes.ContainsKey(block)) continue;
-                _meshes[block].Clear();
+                _meshes[block].Mesh.Clear();
                 _meshes.Remove(block);
             }
             
             foreach (var block in args.BlocksUpdated)
             {
-                _meshes[block] = args.Mesh.Blocks[block].Mesh;
+                _meshes[block] = new UpdatedMeshData(args.Mesh.Blocks[block].Mesh, block);
             }
         }
         
@@ -52,7 +52,7 @@ namespace AR.Repositories
         {
             foreach (var mesh in _meshes)
             {
-                mesh.Value.Clear();
+                mesh.Value.Mesh.Clear();
             }
 
             _meshes.Clear();

@@ -26,7 +26,7 @@ namespace PlaneMeshing.Utilities
 #if UNITY_EDITOR
             point.y *= -1;
 #endif
-            if (math.abs(point.y - bounceCenter.y) > 0.1f &&
+            if (math.abs(point.y - bounceCenter.y) > 0.5f &&
                 orientation == PlaneOrientation.Horizontal) return false;
 
             var rect = GetRectData(bounceCenter, bounceSize, rotation);
@@ -36,7 +36,7 @@ namespace PlaneMeshing.Utilities
             var pcd = TriangleArea(point, rect.C, rect.D);
             var pad = TriangleArea(point, rect.A, rect.D);
 
-            return math.abs(pab + pcd + pbc + pad - rect.Area) < 0.05f;
+            return math.abs(pab + pcd + pbc + pad - rect.Area) < 0.5f;
         }
 
         private static float TriangleArea(float3 a, float3 b, float3 c)

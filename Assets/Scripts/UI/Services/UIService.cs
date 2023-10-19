@@ -25,5 +25,10 @@ namespace UI.Services
         {
             _startGameUiFactory.Create(_uiComponent.Transform);
         }
+
+        public void SetOnCanvas(RectTransform view)
+        {
+            view.SetParent(_uiComponent.Transform);
+        }
     }
 }

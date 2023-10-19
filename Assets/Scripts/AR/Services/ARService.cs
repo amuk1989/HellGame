@@ -14,7 +14,7 @@ using Zenject;
 
 namespace AR.Services
 {
-    public class ARService: IARService, IARProvider, IDisposable, IInitializable
+    public class ARService: IARService, IARProvider, IDisposable, IInitializable, ICameraProvider
     {
         private readonly ARController _controller;
         private readonly ARPlaneRepository _arPlaneRepository;
@@ -32,8 +32,9 @@ namespace AR.Services
         public IObservable<UpdatedMeshData> OnMeshUpdated => _arMeshRepository.OnMeshUpdated;
         public IObservable<UpdatedMeshData> OnMeshRemoved => _arMeshRepository.OnMeshRemoved;
         public IReadOnlyList<PlaneModel> Planes => _arPlaneRepository.Planes;
-        public IEnumerable<Mesh> Meshes => _arMeshRepository.Meshes;
+        public IEnumerable<UpdatedMeshData> Meshes => _arMeshRepository.Meshes;
         public IObservable<PlaneModel> OnPlaneUpdated => _arPlaneRepository.OnPlaneUpdated.Merge(_arPlaneRepository.OnPlaneAdded);
+        public Camera ARCamera => _controller.ARCamera;
 
         public void Initialize()
         {
@@ -45,7 +46,7 @@ namespace AR.Services
             _controller.CreateARComponents();
         }
 
-        public virtual void StartCollection()
+        public void StartCollection()
         {
             if (!IsInitialized) return;
             
@@ -69,6 +70,8 @@ namespace AR.Services
             
             _controller.ARMesh!.MeshBlocksUpdated -= _arMeshRepository.UpdateMeshes;
             _controller.ARMesh!.MeshBlocksCleared -= _arMeshRepository.ClearMeshes;
+            
+            _controller.StopMeshing();
         }
 
         public void Dispose()

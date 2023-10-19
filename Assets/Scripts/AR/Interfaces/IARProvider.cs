@@ -12,7 +12,7 @@ namespace AR.Interfaces
         public IObservable<PlaneModel> OnPlaneUpdated { get; }
         public IObservable<PlaneModel> OnPlaneRemoved { get; }
         public IReadOnlyList<PlaneModel> Planes { get; }
-        public IEnumerable<Mesh> Meshes { get; }
+        public IEnumerable<UpdatedMeshData> Meshes { get; }
         public IObservable<UpdatedMeshData> OnMeshUpdated { get; }
         public IObservable<UpdatedMeshData> OnMeshRemoved { get; }
     }

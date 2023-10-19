@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: ARDebugConfig
   m_EditorClassIdentifier: 
   _anchorView: {fileID: -8592731557625414857, guid: 9095a0fdc461e5d48b78ff62f2584351, type: 3}
-  _isShownAnchorPlanes: 0
-  _isShownAnchorInfo: 0
+  _anchorDebugInfo: {fileID: 7158096359751454933, guid: be0f2f2b9ddf40b4085b971c9c708e65, type: 3}
+  _isShownAnchorPlanes: 1
+  _isShownAnchorInfo: 1
