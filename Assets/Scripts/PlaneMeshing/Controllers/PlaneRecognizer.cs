@@ -5,6 +5,7 @@ using System.Threading;
 using AR.Data;
 using AR.Interfaces;
 using ModestTree;
+using PlaneMeshing.Data;
 using PlaneMeshing.Interfaces;
 using PlaneMeshing.Jobs;
 using PlaneMeshing.Repositories;
@@ -26,14 +27,16 @@ namespace PlaneMeshing.Aggregates
 
         private readonly IARProvider _arProvider;
         private readonly PlaneMeshRepository _planeMeshRepository;
+        private readonly PlaneMeshingConfig _planeMeshingConfig; 
 
         private readonly Semaphore _semaphore = new Semaphore(1,1);
         private JobHandle _jobHandle;
 
-        private PlaneRecognizer(IARProvider arProvider, PlaneMeshRepository planeMeshRepository)
+        private PlaneRecognizer(IARProvider arProvider, PlaneMeshRepository planeMeshRepository, PlaneMeshingConfig config)
         {
             _arProvider = arProvider;
             _planeMeshRepository = planeMeshRepository;
+            _planeMeshingConfig = config;
         }
 
         public void Initialize()
@@ -69,9 +72,9 @@ namespace PlaneMeshing.Aggregates
 
             for (int i = 0; i < planes.Count; i++)
             {
-                var originVertices = new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.TempJob);
-                var originTriangles = new NativeArray<int>(meshData.Mesh.triangles, Allocator.TempJob);
-                var triangles = new NativeArray<bool>(meshData.Mesh.triangles.Length, Allocator.TempJob);
+                var originVertices = new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.Persistent);
+                var originTriangles = new NativeArray<int>(meshData.Mesh.triangles, Allocator.Persistent);
+                var triangles = new NativeArray<bool>(meshData.Mesh.triangles.Length, Allocator.Persistent);
 
                 var job = new SearchTrianglesJob()
                 {
@@ -81,7 +84,7 @@ namespace PlaneMeshing.Aggregates
                     AreaBounce = planes[i].PlaneData.Extends,
                     AreaCenter = planes[i].PlaneData.Center,
                     PlaneRotation = planes[i].PlaneData.Rotation,
-                    PlaneOrientations = planes[i].PlaneData.PlaneOrientation
+                    TrashHold = _planeMeshingConfig.AntialiasingTrashHold
                 };
 
                 var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
@@ -107,10 +110,14 @@ namespace PlaneMeshing.Aggregates
                 if (validCount == 0) continue;
 
                 var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
-                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(originVertices, Allocator.TempJob));
+                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(originVertices, Allocator.Persistent));
                 var planeMesh = CreateMesh(data);
 
                 _planeMeshRepository.AddPlane(meshData.Id, planeMesh);
+
+                originVertices.Dispose();
+                originTriangles.Dispose();
+                triangles.Dispose();
             }
         }
 
@@ -129,6 +136,8 @@ namespace PlaneMeshing.Aggregates
             {
                 pos[i] = vertices[i];
             }
+
+            vertices.Dispose();
             
             data.SetIndexBufferParams(triangles.Length, IndexFormat.UInt16);
             var ib = data.GetIndexData<ushort>();

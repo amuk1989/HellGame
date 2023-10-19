@@ -21,13 +21,11 @@ namespace PlaneMeshing.Utilities
         }
 
         public static bool IsInsidePoint(float3 point, float3 bounceCenter, float3 bounceSize, quaternion rotation,
-            PlaneOrientation orientation = PlaneOrientation.Horizontal)
+            float trashHold = 0.5f)
         {
 #if UNITY_EDITOR
             point.y *= -1;
 #endif
-            if (math.abs(point.y - bounceCenter.y) > 0.5f &&
-                orientation == PlaneOrientation.Horizontal) return false;
 
             var rect = GetRectData(bounceCenter, bounceSize, rotation);
 
@@ -36,7 +34,7 @@ namespace PlaneMeshing.Utilities
             var pcd = TriangleArea(point, rect.C, rect.D);
             var pad = TriangleArea(point, rect.A, rect.D);
 
-            return math.abs(pab + pcd + pbc + pad - rect.Area) < 0.5f;
+            return math.abs(pab + pcd + pbc + pad - rect.Area) < trashHold;
         }
 
         private static float TriangleArea(float3 a, float3 b, float3 c)
