@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using AR.Data;
 using AR.Interfaces;
-using ModestTree;
 using PlaneMeshing.Data;
 using PlaneMeshing.Interfaces;
 using PlaneMeshing.Jobs;
 using PlaneMeshing.Repositories;
 using PlaneMeshing.Utilities;
-using PlaneMeshing.View;
 using UniRx;
 using Unity.Collections;
 using Unity.Jobs;
@@ -19,7 +15,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Zenject;
 
-namespace PlaneMeshing.Aggregates
+namespace PlaneMeshing.Controllers
 {
     public class PlaneRecognizer: IInitializable, IPlaneRecognizer
     {

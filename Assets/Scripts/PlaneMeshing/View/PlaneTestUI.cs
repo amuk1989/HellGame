@@ -1,6 +1,5 @@
 ﻿using System;
 using AR.Interfaces;
-using PlaneMeshing.Aggregates;
 using PlaneMeshing.Interfaces;
 using TMPro;
 using UniRx;

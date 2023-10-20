@@ -1,4 +1,5 @@
 ﻿using AR.Bootstrap;
+using GameStage.Bootstrap;
 using PlaneMeshing.Bootstrap;
 using Scanning.Bootstrap;
 using UI.Bootstrap;
@@ -14,6 +15,7 @@ namespace Main.Bootstrap
             Container.Install<ARInstaller>();
             Container.Install<ScanningInstaller>();
             Container.Install<PlaneMeshingInstaller>();
+            Container.Install<GameStageInstaller>();
         }
     }
 }

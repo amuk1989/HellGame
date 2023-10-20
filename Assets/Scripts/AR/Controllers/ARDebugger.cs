@@ -6,7 +6,7 @@ using AR.View;
 using UniRx;
 using Zenject;
 
-namespace AR.Aggregates
+namespace AR.Controllers
 {
     internal class ARDebugger: IInitializable, IDisposable
     {
