@@ -8,5 +8,10 @@ namespace GameStage.Stages
         {
             
         }
+
+        public void Complete()
+        {
+            
+        }
     }
 }

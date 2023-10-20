@@ -38,13 +38,6 @@ namespace Scanning.Services
 
         private void SubscribeToAR()
         {
-            // _arProvider.OnMeshUpdated
-            //     .Subscribe(_ => Debug.Log("Updated meshes"))
-            //     .AddTo(_compositeDisposable);
-            //
-            // _arProvider.OnPlaneUpdated
-            //     .Subscribe(plane => Debug.Log($"Updated plane {plane.Center}"))
-            //     .AddTo(_compositeDisposable);
         }
     }
 }

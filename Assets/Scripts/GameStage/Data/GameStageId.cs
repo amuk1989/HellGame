@@ -2,6 +2,7 @@
 {
     public enum GameStageId
     {
+        None,
         StartMenu,
         Scanning,
         Game

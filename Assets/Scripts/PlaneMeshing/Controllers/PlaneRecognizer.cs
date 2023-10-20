@@ -37,7 +37,6 @@ namespace PlaneMeshing.Controllers
 
         public void Initialize()
         {
-            StartRecognizer();
         }
 
         public void StartRecognizer()

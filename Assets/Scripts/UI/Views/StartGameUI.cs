@@ -1,5 +1,6 @@
 ﻿using System;
 using AR.Interfaces;
+using GameStage.Interfaces;
 using Scanning.Interfaces;
 using UniRx;
 using UnityEngine;
@@ -15,26 +16,24 @@ namespace UI.Views
         }
 
         [SerializeField] private Button _startGameButton;
-        [SerializeField] private Button _stopScanButton;
 
-        private IScanningService _scanningService;
+        private IGameStageService _gameStageService;
 
         [Inject]
-        private void Construct(IScanningService scanningService)
+        private void Construct(IGameStageService gameStageService)
         {
-            _scanningService = scanningService;
+            _gameStageService = gameStageService;
         }
 
         private void Start()
         {
             _startGameButton
                 .OnClickAsObservable()
-                .Subscribe(_ => _scanningService.AsyncScanningTask())
-                .AddTo(this);
-            
-            _stopScanButton
-                .OnClickAsObservable()
-                .Subscribe(_ => _scanningService.StopScanning())
+                .Subscribe(_ =>
+                {
+                    _gameStageService.NextStage();
+                    Dispose();
+                })
                 .AddTo(this);
         }
 

@@ -2,7 +2,6 @@
 using GameStage.Data;
 using GameStage.Factories;
 using GameStage.Interfaces;
-using GameStage.Services;
 using GameStage.Stages;
 using Zenject;
 
@@ -31,12 +30,7 @@ namespace GameStage.Bootstrap
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<GameStageController>()
-                .AsSingle()
-                .NonLazy();
-            
-            Container
-                .BindInterfacesTo<GameStageService>()
+                .BindInterfacesTo<GameStageController>()
                 .AsSingle()
                 .NonLazy();
 
