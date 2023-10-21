@@ -4,7 +4,7 @@ using Scanning.Interfaces;
 
 namespace GameStage.Stages
 {
-    public class ScanningStage: IGameStage
+    internal class ScanningStage: IGameStage
     {
         private readonly IScanningService _scanningService;
         private readonly IPlaneRecognizer _planeRecognizer;
@@ -18,7 +18,7 @@ namespace GameStage.Stages
         public void Execute()
         {
             _planeRecognizer.StartRecognizer();
-            _scanningService.AsyncScanningTask();
+            _scanningService.StartScanningTask();
         }
 
         public void Complete()

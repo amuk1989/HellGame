@@ -21,7 +21,7 @@ namespace Scanning.Services
             _arProvider = arProvider;
         }
 
-        public async UniTask AsyncScanningTask()
+        public async UniTask StartScanningTask()
         {
             _arService.ARInitialize();
             await UniTask.WaitUntil(() => _arService.IsInitialized);

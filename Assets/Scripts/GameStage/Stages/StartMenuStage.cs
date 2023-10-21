@@ -2,7 +2,7 @@
 
 namespace GameStage.Stages
 {
-    public class StartMenuStage: IGameStage
+    internal class StartMenuStage: IGameStage
     {
         
         public void Execute()

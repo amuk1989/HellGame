@@ -2,6 +2,6 @@
 {
     public interface IRoomService
     {
-        
+        public void CreateHoles();
     }
 }

@@ -5,7 +5,7 @@ namespace Scanning.Interfaces
 {
     public interface IScanningService
     {
-        public UniTask AsyncScanningTask();
+        public UniTask StartScanningTask();
         public void StopScanning();
     }
 }
