@@ -17,11 +17,16 @@ namespace PlaneMeshing.Bootstrap
                 .NonLazy();
             
             Container
-                .BindFactory<Mesh, PlaneView, PlaceholderFactory<Mesh, PlaneView>>()
+                .BindFactory<Material, Mesh, PlaneView, PlaceholderFactory<Material, Mesh, PlaneView>>()
                 .FromFactory<PlaneFactory>();
 
             Container
                 .BindInterfacesAndSelfTo<PlaneMeshRepository>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
+                .BindInterfacesAndSelfTo<PlaneMeshDataRepository>()
                 .AsSingle()
                 .NonLazy();
         }

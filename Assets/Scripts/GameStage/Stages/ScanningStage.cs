@@ -24,6 +24,7 @@ namespace GameStage.Stages
         public void Complete()
         {
             _planeRecognizer.StopRecognizer();
+            _scanningService.StopScanning();
         }
     }
 }

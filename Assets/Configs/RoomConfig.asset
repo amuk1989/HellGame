@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aecf6cfcb5245548bfb20a1b43ec3ca, type: 3}
-  m_Name: GameStageConfig
+  m_Script: {fileID: 11500000, guid: 6ad4135daef749478f90c54d7799ccd0, type: 3}
+  m_Name: RoomConfig
   m_EditorClassIdentifier: 
   _data:
-    _gameStageIds: 010000000200000003000000
+    _holesMaterial: {fileID: 2100000, guid: a16a929eb630a4844b4a0706b35622f2, type: 2}

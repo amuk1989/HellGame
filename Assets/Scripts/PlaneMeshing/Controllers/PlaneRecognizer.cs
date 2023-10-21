@@ -22,13 +22,13 @@ namespace PlaneMeshing.Controllers
         private readonly CompositeDisposable _compositeDisposable = new();
 
         private readonly IARProvider _arProvider;
-        private readonly PlaneMeshRepository _planeMeshRepository;
-        private readonly PlaneMeshingConfig _planeMeshingConfig; 
+        private readonly PlaneMeshDataRepository _planeMeshRepository;
+        private readonly PlaneMeshingConfigData _planeMeshingConfig; 
 
         private readonly Semaphore _semaphore = new Semaphore(1,1);
         private JobHandle _jobHandle;
 
-        private PlaneRecognizer(IARProvider arProvider, PlaneMeshRepository planeMeshRepository, PlaneMeshingConfig config)
+        private PlaneRecognizer(IARProvider arProvider, PlaneMeshDataRepository planeMeshRepository, PlaneMeshingConfigData config)
         {
             _arProvider = arProvider;
             _planeMeshRepository = planeMeshRepository;
@@ -83,7 +83,6 @@ namespace PlaneMeshing.Controllers
                 };
 
                 var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
-                handle.Complete();
 
                 var antiAliasingJob = new AntialiasingPlaneJob()
                 {
@@ -97,7 +96,7 @@ namespace PlaneMeshing.Controllers
                     Offset = _planeMeshingConfig.AntialiasingTrashHold
                 };
 
-                var antiAliasingHandle = antiAliasingJob.Schedule(originVertices.Length, 64);
+                var antiAliasingHandle = antiAliasingJob.Schedule(originVertices.Length, 64, handle);
                 antiAliasingHandle.Complete();
 
                 var validCount = triangles.Count(x => x);
@@ -105,7 +104,7 @@ namespace PlaneMeshing.Controllers
                 if (validCount == 0) continue;
 
                 var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
-                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(originVertices, Allocator.Persistent));
+                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(originVertices, Allocator.Temp));
                 var planeMesh = CreateMesh(data);
 
                 _planeMeshRepository.AddPlane(meshData.Id, planeMesh);
@@ -143,6 +142,8 @@ namespace PlaneMeshing.Controllers
             data.subMeshCount = 1;
             
             data.SetSubMesh(0, new SubMeshDescriptor(0, ib.Length));
+
+            triangles.Dispose();
 
             return dataArray;
         }

@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _timeToDiscovery: 1
   _meshSequencePath: Assets/Plugins/MockMeshes/LivingRoom/Pixel4a-LivingRoom
-  _updateInterval: 2
+  _updateInterval: 0.2
 --- !u!1 &2470140685735773884
 GameObject:
   m_ObjectHideFlags: 0

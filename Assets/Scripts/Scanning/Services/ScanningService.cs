@@ -26,18 +26,12 @@ namespace Scanning.Services
             _arService.ARInitialize();
             await UniTask.WaitUntil(() => _arService.IsInitialized);
             _arService.StartCollection();
-            
-            SubscribeToAR();
         }
 
         public void StopScanning()
         {
             _arService.StopCollection();
             _compositeDisposable?.Clear();
-        }
-
-        private void SubscribeToAR()
-        {
         }
     }
 }

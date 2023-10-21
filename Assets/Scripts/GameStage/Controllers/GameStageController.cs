@@ -12,12 +12,12 @@ namespace GameStage.Controllers
         private IGameStage _currentStage;
         private int _currentStageIndex;
 
-        private readonly GameStageConfig _gameStageConfig;
+        private readonly GameStageConfigData _gameStageConfig;
         private readonly GameStageFactory _gameStageFactory;
 
         private readonly ReactiveProperty<GameStageId> _currentStageId = new ();
 
-        public GameStageController(GameStageConfig gameStageConfig, GameStageFactory gameStageFactory)
+        public GameStageController(GameStageConfigData gameStageConfig, GameStageFactory gameStageFactory)
         {
             _gameStageConfig = gameStageConfig;
             _gameStageFactory = gameStageFactory;

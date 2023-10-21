@@ -1,22 +1,34 @@
-﻿using AR.Interfaces;
+﻿using PlaneMeshing.Factories;
+using PlaneMeshing.Interfaces;
+using Scanning.Data;
 using Scanning.Interfaces;
-using UnityEngine.PlayerLoop;
 using Zenject;
 
 namespace Scanning.Services
 {
     internal class RoomService: IRoomService, IInitializable
     {
-        private readonly IARService _arService;
+        private readonly IPlaneMeshesProvider _planeMeshes;
+        private readonly PlaneFactory _planeFactory;
+        private readonly RoomConfigData _roomConfig;
 
-        public RoomService(IARService arService)
+        public RoomService(IPlaneMeshesProvider planeMeshes, RoomConfigData roomConfig)
         {
-            _arService = arService;
+            _planeMeshes = planeMeshes;
+            _roomConfig = roomConfig;
         }
 
         public void Initialize()
         {
             
+        }
+
+        public void CreateHoles()
+        {
+            foreach (var plane in _planeMeshes.PlaneMeshes)
+            {
+                _planeFactory.Create(_roomConfig.HolesMaterial, plane.Value);
+            }
         }
     }
 }

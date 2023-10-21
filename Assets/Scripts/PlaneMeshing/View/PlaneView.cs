@@ -8,12 +8,15 @@ namespace PlaneMeshing.View
     public class PlaneView: MonoBehaviour, IDisposable
     {
         [SerializeField] private MeshFilter _meshFilter;
+        [SerializeField] private MeshRenderer _meshRenderer;
 
         private Mesh _mesh;
+        private Material _material;
 
         [Inject]
-        private void Construct(Mesh mesh)
+        private void Construct(Mesh mesh, Material material)
         {
+            _material = material;
             _mesh = mesh;
         }
 
@@ -25,7 +28,7 @@ namespace PlaneMeshing.View
             transform.localScale = new Vector3(1, 1, 1);
 #endif
             _meshFilter.mesh = _mesh;
-            gameObject.name = _mesh.name;
+            _meshRenderer.material = _material;
         }
 
         public void Dispose()

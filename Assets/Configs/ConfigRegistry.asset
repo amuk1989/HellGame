@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _planeMeshingConfig: {fileID: 11400000, guid: 93adaf4049279d44f940604bd38ce7f9, type: 2}
   _gameStageConfig: {fileID: 11400000, guid: 1e1dd8e8b2ae3fc45bc997f6fa894bbb, type: 2}
+  _roomConfig: {fileID: 11400000, guid: 6c6c89783e00fd04baaac926974d2a76, type: 2}
