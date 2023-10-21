@@ -17,9 +17,9 @@ namespace PlaneMeshing.Repositories
             .Merge(_planeMeshes.ObserveReplace().Select(x => new PlaneMeshData(x.Key, x.NewValue)))
             .AsObservable();
 
-        public IObservable<Vector3Int> PlaneMeshRemoveAsObservable() => _planeMeshes
+        public IObservable<PlaneMeshData> PlaneMeshRemoveAsObservable() => _planeMeshes
             .ObserveRemove()
-            .Select(x => x.Key)
+            .Select(x => new PlaneMeshData(x.Key, x.Value))
             .AsObservable();
 
         public IDictionary<Vector3Int, Mesh> PlaneMeshes => _planeMeshes;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PlaneMeshing.Data;
+using PlaneMeshing.Interfaces;
 using PlaneMeshing.View;
 using UniRx;
 using UnityEngine;
@@ -15,11 +16,11 @@ namespace PlaneMeshing.Repositories
         private readonly CompositeDisposable _compositeDisposable = new();
 
         private readonly PlaceholderFactory<Material, Mesh, PlaneView> _planeFactory;
-        private readonly PlaneMeshDataRepository _planeMeshDataRepository;
+        private readonly IPlaneMeshesProvider _planeMeshDataRepository;
         private readonly PlaneMeshingConfigData _config;
 
         internal PlaneMeshRepository(PlaceholderFactory<Material, Mesh, PlaneView> planeFactory,
-            PlaneMeshDataRepository planeMeshDataRepository, PlaneMeshingConfigData config)
+            IPlaneMeshesProvider planeMeshDataRepository, PlaneMeshingConfigData config)
         {
             _planeFactory = planeFactory;
             _planeMeshDataRepository = planeMeshDataRepository;
@@ -30,7 +31,7 @@ namespace PlaneMeshing.Repositories
         {
             _planeMeshDataRepository
                 .PlaneMeshRemoveAsObservable()
-                .Subscribe(RemovePlane)
+                .Subscribe(data => RemovePlane(data.Key))
                 .AddTo(_compositeDisposable);
 
             _planeMeshDataRepository

@@ -7,5 +7,6 @@ namespace Scanning.Interfaces
     {
         public UniTask StartScanningTask();
         public void StopScanning();
+        public float ScannedArea { get; }
     }
 }
