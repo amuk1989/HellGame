@@ -17,9 +17,12 @@ namespace Scanning.Services
         private readonly IPlaneMeshesProvider _planeMeshes;
 
         private readonly CompositeDisposable _compositeDisposable = new();
-        private volatile float _scannedArea;
+        private volatile ReactiveProperty<float> _scannedArea = new();
+        private readonly ReactiveCommand _onEnoughScanned = new();
 
         private readonly Stopwatch _stopwatch = new();
+
+        private bool _isEnoughScanned = false;
 
         public ScanningService(IARService arService, IARProvider arProvider, IPlaneMeshesProvider planeMeshesProvider)
         {
@@ -28,7 +31,8 @@ namespace Scanning.Services
             _planeMeshes = planeMeshesProvider;
         }
 
-        public float ScannedArea => _scannedArea;
+        public IObservable<float> ScannedAreaAsObservable() => _scannedArea.AsObservable();
+        public IObservable<Unit> ScannedEnoughArea() => _onEnoughScanned.AsObservable();
 
         public async UniTask StartScanningTask()
         {
@@ -46,10 +50,15 @@ namespace Scanning.Services
                 .Subscribe(data =>
                 {
                     _stopwatch.Reset();
-                    _scannedArea += AreaCalculationUtility.CalculatePlaneArea(data.Value);
+                    _scannedArea.Value += AreaCalculationUtility.CalculatePlaneArea(data.Value);
                     _stopwatch.Stop();
                     UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +
                                           $"ms {_stopwatch.ElapsedMilliseconds}");
+                    
+                    if (_isEnoughScanned || _scannedArea.Value < 2f) return;
+
+                    _isEnoughScanned = true;
+                    _onEnoughScanned.Execute();
                 })
                 .AddTo(_compositeDisposable);
             
@@ -58,7 +67,7 @@ namespace Scanning.Services
                 .Subscribe(data =>
                 {
                     _stopwatch.Reset();
-                    _scannedArea -= AreaCalculationUtility.CalculatePlaneArea(data.Value);
+                    _scannedArea.Value -= AreaCalculationUtility.CalculatePlaneArea(data.Value);
                     _stopwatch.Stop();
                     UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +
                                           $"ms {_stopwatch.ElapsedMilliseconds}");
@@ -70,6 +79,7 @@ namespace Scanning.Services
         {
             _arService.StopCollection();
             _compositeDisposable?.Clear();
+            _isEnoughScanned = false;
         }
 
         public void Dispose()

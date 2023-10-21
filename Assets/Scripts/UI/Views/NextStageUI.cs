@@ -9,12 +9,8 @@ using Zenject;
 
 namespace UI.Views
 {
-    public class StartGameUI: MonoBehaviour, IDisposable
+    public class NextStageUI: BaseUI, IDisposable
     {
-        public class Factory: PlaceholderFactory<Transform, StartGameUI>
-        {
-        }
-
         [SerializeField] private Button _startGameButton;
 
         private IGameStageService _gameStageService;

@@ -1,5 +1,6 @@
 ﻿using UI.Factories;
 using UI.Interfaces;
+using UI.Rules;
 using UI.Services;
 using UI.Views;
 using UnityEngine;
@@ -13,8 +14,8 @@ namespace UI.Bootstrap
         public override void InstallBindings()
         {
             Container
-                .BindFactory<Transform, StartGameUI, StartGameUI.Factory>()
-                .FromFactory<StartGamePrefabFactory>();
+                .BindFactory<string, Transform, BaseUI, BaseUI.Factory>()
+                .FromFactory<UIPrefabFactory>();
 
             Container
                 .Bind<UIComponent>()
@@ -23,6 +24,7 @@ namespace UI.Bootstrap
                 .NonLazy();
 
             Container.InstallServiceAsInterface<UIService>();
+            Container.InstallServiceAsInterface<UIRule>();
         }
     }
 }

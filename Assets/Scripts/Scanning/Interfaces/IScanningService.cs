@@ -1,4 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using UniRx;
 using Zenject;
 
 namespace Scanning.Interfaces
@@ -7,6 +9,7 @@ namespace Scanning.Interfaces
     {
         public UniTask StartScanningTask();
         public void StopScanning();
-        public float ScannedArea { get; }
+        public IObservable<float> ScannedAreaAsObservable();
+        public IObservable<Unit> ScannedEnoughArea();
     }
 }
