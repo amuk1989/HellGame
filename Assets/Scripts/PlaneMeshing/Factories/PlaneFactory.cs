@@ -6,7 +6,7 @@ using Zenject;
 
 namespace PlaneMeshing.Factories
 {
-    public class PlaneFactory: IFactory<Material, Mesh, PlaneView>
+    public class PlaneFactory: IFactory<LayerMask, Material, Mesh, PlaneView>
     {
         private readonly DiContainer _diContainer;
 
@@ -15,10 +15,10 @@ namespace PlaneMeshing.Factories
             _diContainer = diContainer;
         }
 
-        public PlaneView Create(Material material, Mesh param)
+        public PlaneView Create(LayerMask mask, Material material, Mesh param)
         {
             return _diContainer
-                .InstantiatePrefabResourceForComponent<PlaneView>(Consts.Plane, new Object[] {material, param});
+                .InstantiatePrefabResourceForComponent<PlaneView>(Consts.Plane, new object[] {mask, material, param});
         }
     }
 }

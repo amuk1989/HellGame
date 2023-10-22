@@ -56,8 +56,16 @@ Shader "Polytope Studio/PT_Water_Shader"
 
 		
 
-		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" "Queue"="Transparent" "UniversalMaterialType"="Lit" }
+		Tags { "Queue" = "Geometry+1" "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" "Queue"="Transparent" "UniversalMaterialType"="Lit" }
 
+		Stencil
+		{
+			Ref 1
+            Comp Equal
+            Pass Keep
+            Fail Keep
+		}
+		
 		Cull Off
 		ZWrite On
 		ZTest LEqual

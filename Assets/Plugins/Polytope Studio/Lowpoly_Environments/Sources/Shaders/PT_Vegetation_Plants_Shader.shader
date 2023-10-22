@@ -58,7 +58,7 @@ Shader "Polytope Studio/PT_Vegetation_Plants_Shader"
 
 		
 
-		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry" "UniversalMaterialType"="Lit" }
+		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry+1" "UniversalMaterialType"="Lit" }
 
 		Cull Off
 		ZWrite On
@@ -66,7 +66,13 @@ Shader "Polytope Studio/PT_Vegetation_Plants_Shader"
 		Offset 0 , 0
 		AlphaToMask Off
 
-		
+		Stencil
+		{
+			Ref 1
+            Comp Equal
+            Pass Keep
+            Fail Keep
+		}
 
 		HLSLINCLUDE
 		#pragma target 3.5

@@ -10,10 +10,10 @@ namespace Scanning.Repositories
     internal class HolesRepository
     {
         private readonly List<PlaneView> _planeViews = new();
-        private readonly PlaceholderFactory<Material, Mesh, PlaneView> _planeFactory;
+        private readonly PlaneView.Factory _planeFactory;
         private readonly RoomConfigData _roomConfig;
 
-        public HolesRepository(PlaceholderFactory<Material, Mesh, PlaneView> planeFactory, RoomConfigData roomConfig)
+        public HolesRepository(PlaneView.Factory planeFactory, RoomConfigData roomConfig)
         {
             _planeFactory = planeFactory;
             _roomConfig = roomConfig;
@@ -21,7 +21,7 @@ namespace Scanning.Repositories
 
         public void AddHole(Mesh mesh)
         {
-            _planeFactory.Create(_roomConfig.HolesMaterial, mesh);
+            _planeFactory.Create(_roomConfig.StencilLayerMask,_roomConfig.HolesMaterial, mesh);
         }
     }
 }

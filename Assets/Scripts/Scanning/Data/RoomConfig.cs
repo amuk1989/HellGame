@@ -15,8 +15,10 @@ namespace Scanning.Data
     {
         [SerializeField] private Material _holesMaterial;
         [SerializeField] private float _minArea;
+        [SerializeField] private LayerMask _stencilLayerMask;
 
         public Material HolesMaterial => _holesMaterial;
         public float MinArea => _minArea;
+        public LayerMask StencilLayerMask => _stencilLayerMask;
     }
 }

@@ -6,6 +6,7 @@ using PlaneMeshing.View;
 using UniRx;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using Utility;
 using Zenject;
 
 namespace PlaneMeshing.Repositories
@@ -15,11 +16,11 @@ namespace PlaneMeshing.Repositories
         private readonly Dictionary<Vector3Int, PlaneView> _planeMeshes = new();
         private readonly CompositeDisposable _compositeDisposable = new();
 
-        private readonly PlaceholderFactory<Material, Mesh, PlaneView> _planeFactory;
+        private readonly PlaneView.Factory _planeFactory;
         private readonly IPlaneMeshesProvider _planeMeshDataRepository;
         private readonly PlaneMeshingConfigData _config;
 
-        internal PlaneMeshRepository(PlaceholderFactory<Material, Mesh, PlaneView> planeFactory,
+        internal PlaneMeshRepository(PlaneView.Factory planeFactory,
             IPlaneMeshesProvider planeMeshDataRepository, PlaneMeshingConfigData config)
         {
             _planeFactory = planeFactory;
@@ -49,7 +50,7 @@ namespace PlaneMeshing.Repositories
         {
             if (_planeMeshes.TryGetValue(id, out var view)) view.Dispose();
 
-            _planeMeshes[id] = _planeFactory.Create(_config.PlaneMaterial, plane);
+            _planeMeshes[id] = _planeFactory.Create(Consts.DefaultLayer, _config.PlaneMaterial, plane);
         }
 
         private void RemovePlane(Vector3Int id)

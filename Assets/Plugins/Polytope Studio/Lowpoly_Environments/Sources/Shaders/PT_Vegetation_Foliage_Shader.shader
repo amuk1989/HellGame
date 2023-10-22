@@ -59,8 +59,16 @@ Shader "Polytope Studio/PT_Vegetation_Foliage_Shader"
 
 		
 
-		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry" "UniversalMaterialType"="Lit" }
+		Tags { "Queue" = "Geometry+1" "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry" "UniversalMaterialType"="Lit" }
 
+		Stencil
+		{
+			Ref 1
+            Comp Equal
+            Pass Keep
+            Fail Keep
+		}
+		
 		Cull Off
 		ZWrite On
 		ZTest LEqual

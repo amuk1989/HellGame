@@ -53,7 +53,7 @@ namespace Scanning.Services
                 .PlaneMeshUpdateAsObservable()
                 .Subscribe(data =>
                 {
-                    _stopwatch.Reset();
+                    _stopwatch.Restart();
                     _scannedArea.Value += AreaCalculationUtility.CalculatePlaneArea(data.Value);
                     _stopwatch.Stop();
                     UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +
@@ -70,7 +70,7 @@ namespace Scanning.Services
                 .PlaneMeshRemoveAsObservable()
                 .Subscribe(data =>
                 {
-                    _stopwatch.Reset();
+                    _stopwatch.Restart();
                     _scannedArea.Value -= AreaCalculationUtility.CalculatePlaneArea(data.Value);
                     _stopwatch.Stop();
                     UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +

@@ -17,7 +17,7 @@ namespace PlaneMeshing.Bootstrap
                 .NonLazy();
             
             Container
-                .BindFactory<Material, Mesh, PlaneView, PlaceholderFactory<Material, Mesh, PlaneView>>()
+                .BindFactory<LayerMask, Material, Mesh, PlaneView, PlaneView.Factory>()
                 .FromFactory<PlaneFactory>();
 
             Container

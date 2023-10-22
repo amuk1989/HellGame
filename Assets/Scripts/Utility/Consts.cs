@@ -1,4 +1,6 @@
-﻿namespace Utility
+﻿using UnityEngine;
+
+namespace Utility
 {
     public static class Consts
     {
@@ -9,5 +11,6 @@
         public const string Plane = "Prefabs/Environment/PlaneView";
         public const string ScanProgressUI = "Prefabs/UI/ScannedProgressUI";
         public const string ScanStopUI = "Prefabs/UI/StopScanningUI";
+        public static readonly LayerMask DefaultLayer = LayerMask.NameToLayer("Default");
     }
 }
