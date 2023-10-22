@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AR.Interfaces;
 using Cysharp.Threading.Tasks;
 using PlaneMeshing.Interfaces;
+using Scanning.Data;
 using Scanning.Interfaces;
 using Scanning.Utilities;
 using UniRx;
@@ -15,6 +16,7 @@ namespace Scanning.Services
         private readonly IARService _arService;
         private readonly IARProvider _arProvider;
         private readonly IPlaneMeshesProvider _planeMeshes;
+        private readonly RoomConfigData _roomConfig;
 
         private readonly CompositeDisposable _compositeDisposable = new();
         private volatile ReactiveProperty<float> _scannedArea = new();
@@ -24,11 +26,13 @@ namespace Scanning.Services
 
         private bool _isEnoughScanned = false;
 
-        public ScanningService(IARService arService, IARProvider arProvider, IPlaneMeshesProvider planeMeshesProvider)
+        public ScanningService(IARService arService, IARProvider arProvider, IPlaneMeshesProvider planeMeshesProvider,
+            RoomConfigData roomConfig)
         {
             _arService = arService;
             _arProvider = arProvider;
             _planeMeshes = planeMeshesProvider;
+            _roomConfig = roomConfig;
         }
 
         public IObservable<float> ScannedAreaAsObservable() => _scannedArea.AsObservable();
@@ -55,7 +59,7 @@ namespace Scanning.Services
                     UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +
                                           $"ms {_stopwatch.ElapsedMilliseconds}");
                     
-                    if (_isEnoughScanned || _scannedArea.Value < 2f) return;
+                    if (_isEnoughScanned || _scannedArea.Value < _roomConfig.MinArea) return;
 
                     _isEnoughScanned = true;
                     _onEnoughScanned.Execute();
@@ -80,6 +84,7 @@ namespace Scanning.Services
             _arService.StopCollection();
             _compositeDisposable?.Clear();
             _isEnoughScanned = false;
+            _scannedArea.Value = 0;
         }
 
         public void Dispose()

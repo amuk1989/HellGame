@@ -18,6 +18,7 @@ namespace UI.Rules
         private readonly UIComponent _uiComponent;
         private readonly BaseUI.Factory _uiPrefabFactory;
         private readonly IScanningService _scanningService;
+        private BaseUI _progressUI;
 
         public UIRule(IGameStageService gameStageService, 
             UIComponent uiComponent, IScanningService scanningService, BaseUI.Factory uiPrefabFactory)
@@ -39,7 +40,13 @@ namespace UI.Rules
             _gameStageService
                 .GameStageAsObservable()
                 .Where(x => x == GameStageId.Scanning)
-                .Subscribe(_ => _uiPrefabFactory.Create(Consts.ScanProgressUI, _uiComponent.Transform))
+                .Subscribe(_ => _progressUI = _uiPrefabFactory.Create(Consts.ScanProgressUI, _uiComponent.Transform))
+                .AddTo(_compositeDisposable);
+            
+            _gameStageService
+                .GameStageAsObservable()
+                .Where(x => x == GameStageId.Game)
+                .Subscribe(_ => _progressUI.Dispose())
                 .AddTo(_compositeDisposable);
 
             _scanningService

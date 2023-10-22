@@ -32,10 +32,5 @@ namespace UI.Views
                 })
                 .AddTo(this);
         }
-
-        public void Dispose()
-        {
-            Destroy(gameObject);
-        }
     }
 }

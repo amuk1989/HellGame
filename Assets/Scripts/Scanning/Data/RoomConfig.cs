@@ -14,7 +14,9 @@ namespace Scanning.Data
     public struct RoomConfigData: IConfigData
     {
         [SerializeField] private Material _holesMaterial;
+        [SerializeField] private float _minArea;
 
         public Material HolesMaterial => _holesMaterial;
+        public float MinArea => _minArea;
     }
 }
