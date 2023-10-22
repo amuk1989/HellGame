@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using AR.Data;
 using AR.Interfaces;
-using ModestTree;
 using PlaneMeshing.Data;
 using PlaneMeshing.Interfaces;
 using PlaneMeshing.Jobs;
 using PlaneMeshing.Repositories;
 using PlaneMeshing.Utilities;
-using PlaneMeshing.View;
 using UniRx;
 using Unity.Collections;
 using Unity.Jobs;
@@ -19,20 +15,20 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Zenject;
 
-namespace PlaneMeshing.Aggregates
+namespace PlaneMeshing.Controllers
 {
     public class PlaneRecognizer: IInitializable, IPlaneRecognizer
     {
         private readonly CompositeDisposable _compositeDisposable = new();
 
         private readonly IARProvider _arProvider;
-        private readonly PlaneMeshRepository _planeMeshRepository;
-        private readonly PlaneMeshingConfig _planeMeshingConfig; 
+        private readonly PlaneMeshDataRepository _planeMeshRepository;
+        private readonly PlaneMeshingConfigData _planeMeshingConfig; 
 
         private readonly Semaphore _semaphore = new Semaphore(1,1);
         private JobHandle _jobHandle;
 
-        private PlaneRecognizer(IARProvider arProvider, PlaneMeshRepository planeMeshRepository, PlaneMeshingConfig config)
+        private PlaneRecognizer(IARProvider arProvider, PlaneMeshDataRepository planeMeshRepository, PlaneMeshingConfigData config)
         {
             _arProvider = arProvider;
             _planeMeshRepository = planeMeshRepository;
@@ -41,7 +37,6 @@ namespace PlaneMeshing.Aggregates
 
         public void Initialize()
         {
-            StartRecognizer();
         }
 
         public void StartRecognizer()
@@ -88,7 +83,6 @@ namespace PlaneMeshing.Aggregates
                 };
 
                 var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
-                handle.Complete();
 
                 var antiAliasingJob = new AntialiasingPlaneJob()
                 {
@@ -102,7 +96,7 @@ namespace PlaneMeshing.Aggregates
                     Offset = _planeMeshingConfig.AntialiasingTrashHold
                 };
 
-                var antiAliasingHandle = antiAliasingJob.Schedule(originVertices.Length, 64);
+                var antiAliasingHandle = antiAliasingJob.Schedule(originVertices.Length, 64, handle);
                 antiAliasingHandle.Complete();
 
                 var validCount = triangles.Count(x => x);
@@ -110,7 +104,7 @@ namespace PlaneMeshing.Aggregates
                 if (validCount == 0) continue;
 
                 var validTriangles = MeshingUtility.GetValidVertices(originTriangles, triangles, validCount);
-                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(originVertices, Allocator.Persistent));
+                var data = GetMeshData(validTriangles, new NativeArray<Vector3>(originVertices, Allocator.Temp));
                 var planeMesh = CreateMesh(data);
 
                 _planeMeshRepository.AddPlane(meshData.Id, planeMesh);
@@ -148,6 +142,8 @@ namespace PlaneMeshing.Aggregates
             data.subMeshCount = 1;
             
             data.SetSubMesh(0, new SubMeshDescriptor(0, ib.Length));
+
+            triangles.Dispose();
 
             return dataArray;
         }

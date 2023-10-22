@@ -5,7 +5,6 @@ namespace UI.Interfaces
 {
     public interface IUiService: IInitializable
     {
-        public void CreateStartMenu();
         public void SetOnCanvas(RectTransform view);
     }
 }

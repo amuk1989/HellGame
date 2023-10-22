@@ -68,7 +68,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3195897222180204104
 Transform:
   m_ObjectHideFlags: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _timeToDiscovery: 1
   _meshSequencePath: Assets/Plugins/MockMeshes/LivingRoom/Pixel4a-LivingRoom
-  _updateInterval: 2
+  _updateInterval: 1
 --- !u!1 &2470140685735773884
 GameObject:
   m_ObjectHideFlags: 0

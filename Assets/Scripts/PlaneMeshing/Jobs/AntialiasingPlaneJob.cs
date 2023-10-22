@@ -1,10 +1,12 @@
-﻿using Unity.Collections;
+﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace PlaneMeshing.Jobs
 {
+    [BurstCompile]
     public struct AntialiasingPlaneJob: IJobParallelFor
     {
         public NativeArray<Vector3> Vertices;

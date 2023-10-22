@@ -1,4 +1,4 @@
-﻿using PlaneMeshing.Aggregates;
+﻿using PlaneMeshing.Controllers;
 using PlaneMeshing.Factories;
 using PlaneMeshing.Repositories;
 using PlaneMeshing.View;
@@ -17,11 +17,16 @@ namespace PlaneMeshing.Bootstrap
                 .NonLazy();
             
             Container
-                .BindFactory<Mesh, PlaneView, PlaceholderFactory<Mesh, PlaneView>>()
+                .BindFactory<LayerMask, Material, Mesh, PlaneView, PlaneView.Factory>()
                 .FromFactory<PlaneFactory>();
 
             Container
                 .BindInterfacesAndSelfTo<PlaneMeshRepository>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
+                .BindInterfacesAndSelfTo<PlaneMeshDataRepository>()
                 .AsSingle()
                 .NonLazy();
         }

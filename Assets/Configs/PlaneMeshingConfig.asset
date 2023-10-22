@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d40490d79981468f9e7ffc59211f3714, type: 3}
   m_Name: PlaneMeshingConfig
   m_EditorClassIdentifier: 
-  _antialiasingTrashHold: 0.2
+  _data:
+    _antialiasingTrashHold: 0.1
+    _planeMaterial: {fileID: 2100000, guid: bc409619c052d284abf50d66b72ca3ef, type: 2}

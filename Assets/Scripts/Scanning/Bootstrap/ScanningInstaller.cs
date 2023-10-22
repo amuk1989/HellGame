@@ -1,4 +1,5 @@
 ﻿using Scanning.Interfaces;
+using Scanning.Repositories;
 using Scanning.Services;
 using Zenject;
 
@@ -15,6 +16,11 @@ namespace Scanning.Bootstrap
             
             Container
                 .BindInterfacesTo<ScanningService>()
+                .AsSingle()
+                .NonLazy();
+
+            Container
+                .Bind<HolesRepository>()
                 .AsSingle()
                 .NonLazy();
         }

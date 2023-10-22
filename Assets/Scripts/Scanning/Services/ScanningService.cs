@@ -1,50 +1,95 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using AR.Interfaces;
 using Cysharp.Threading.Tasks;
+using PlaneMeshing.Interfaces;
+using Scanning.Data;
 using Scanning.Interfaces;
+using Scanning.Utilities;
 using UniRx;
-using UnityEngine;
-using Zenject;
 
 namespace Scanning.Services
 {
-    internal class ScanningService: IScanningService
+    internal class ScanningService: IScanningService, IDisposable
     {
         private readonly IARService _arService;
         private readonly IARProvider _arProvider;
+        private readonly IPlaneMeshesProvider _planeMeshes;
+        private readonly RoomConfigData _roomConfig;
 
         private readonly CompositeDisposable _compositeDisposable = new();
+        private volatile ReactiveProperty<float> _scannedArea = new();
+        private readonly ReactiveCommand _onEnoughScanned = new();
 
-        public ScanningService(IARService arService, IARProvider arProvider)
+        private readonly Stopwatch _stopwatch = new();
+
+        private bool _isEnoughScanned = false;
+
+        public ScanningService(IARService arService, IARProvider arProvider, IPlaneMeshesProvider planeMeshesProvider,
+            RoomConfigData roomConfig)
         {
             _arService = arService;
             _arProvider = arProvider;
+            _planeMeshes = planeMeshesProvider;
+            _roomConfig = roomConfig;
         }
 
-        public async UniTask AsyncScanningTask()
+        public IObservable<float> ScannedAreaAsObservable() => _scannedArea.AsObservable();
+        public IObservable<Unit> ScannedEnoughArea() => _onEnoughScanned.AsObservable();
+
+        public async UniTask StartScanningTask()
         {
             _arService.ARInitialize();
             await UniTask.WaitUntil(() => _arService.IsInitialized);
             _arService.StartCollection();
             
-            SubscribeToAR();
+            StartCalculateArea();
+        }
+
+        private void StartCalculateArea()
+        {
+            _planeMeshes
+                .PlaneMeshUpdateAsObservable()
+                .Subscribe(data =>
+                {
+                    _stopwatch.Restart();
+                    _scannedArea.Value += AreaCalculationUtility.CalculatePlaneArea(data.Value);
+                    _stopwatch.Stop();
+                    UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +
+                                          $"ms {_stopwatch.ElapsedMilliseconds}");
+                    
+                    if (_isEnoughScanned || _scannedArea.Value < _roomConfig.MinArea) return;
+
+                    _isEnoughScanned = true;
+                    _onEnoughScanned.Execute();
+                })
+                .AddTo(_compositeDisposable);
+            
+            _planeMeshes
+                .PlaneMeshRemoveAsObservable()
+                .Subscribe(data =>
+                {
+                    _stopwatch.Restart();
+                    _scannedArea.Value -= AreaCalculationUtility.CalculatePlaneArea(data.Value);
+                    _stopwatch.Stop();
+                    UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +
+                                          $"ms {_stopwatch.ElapsedMilliseconds}");
+                })
+                .AddTo(_compositeDisposable);
         }
 
         public void StopScanning()
         {
             _arService.StopCollection();
             _compositeDisposable?.Clear();
+            _isEnoughScanned = false;
+            _scannedArea.Value = 0;
         }
 
-        private void SubscribeToAR()
+        public void Dispose()
         {
-            // _arProvider.OnMeshUpdated
-            //     .Subscribe(_ => Debug.Log("Updated meshes"))
-            //     .AddTo(_compositeDisposable);
-            //
-            // _arProvider.OnPlaneUpdated
-            //     .Subscribe(plane => Debug.Log($"Updated plane {plane.Center}"))
-            //     .AddTo(_compositeDisposable);
+            _compositeDisposable?.Dispose();
         }
     }
 }

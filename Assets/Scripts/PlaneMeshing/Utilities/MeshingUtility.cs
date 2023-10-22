@@ -37,7 +37,7 @@ namespace PlaneMeshing.Utilities
             return math.abs(pab + pcd + pbc + pad - rect.Area) < trashHold;
         }
 
-        private static float TriangleArea(float3 a, float3 b, float3 c)
+        public static float TriangleArea(float3 a, float3 b, float3 c)
         {
             var ab = math.distance(a, b);
             var ac = math.distance(a, c);

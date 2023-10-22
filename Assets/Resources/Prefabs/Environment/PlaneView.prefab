@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7099886300680371251}
   - component: {fileID: 438399475106295179}
   - component: {fileID: 3157524217126137958}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlaneView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,3 +97,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshFilter: {fileID: 7099886300680371251}
+  _meshRenderer: {fileID: 438399475106295179}

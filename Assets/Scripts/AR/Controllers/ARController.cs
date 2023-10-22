@@ -1,16 +1,13 @@
-﻿using AR.Data;
-using AR.Repositories;
+﻿using AR.Repositories;
 using AR.View;
 using JetBrains.Annotations;
 using Niantic.ARDK.AR;
-using Niantic.ARDK.AR.ARSessionEventArgs;
 using Niantic.ARDK.AR.Configuration;
 using Niantic.ARDK.AR.Mesh;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace AR.Aggregates
+namespace AR.Controllers
 {
     internal class ARController: IInitializable
     {

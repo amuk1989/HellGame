@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Base.Interfaces;
 using UnityEngine;
 using Zenject;
 
@@ -14,7 +15,8 @@ namespace Utility
                 .NonLazy();
         }
         
-        public static void InstallRegistry<TRegistry>(this DiContainer container, TRegistry registry) where TRegistry: ScriptableObject
+        public static void InstallRegistry<TRegistry>(this DiContainer container, TRegistry registry) 
+            where TRegistry: struct, IConfigData
         {
             container
                 .Bind<TRegistry>()
