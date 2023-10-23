@@ -5,6 +5,7 @@ using AR.Interfaces;
 using AR.Models;
 using AR.Repositories;
 using AR.Services;
+using AR.Utils;
 using AR.View;
 using UnityEngine;
 using Utility;
@@ -55,6 +56,13 @@ namespace AR.Bootstrap
             Container
                 .BindFactory<PlaneData, PlaneModel, PlaneModel.Factory>()
                 .FromFactory<PlaneModelFactory>();
+
+#if !UNITY_EDITOR && PLATFORM_ANDROID
+            Container
+                .BindInterfacesTo<AndroidPermissions>()
+                .AsSingle()
+                .Lazy();
+#endif
             
             if (_arDebugConfig == null) return;
 

@@ -93,7 +93,7 @@ namespace PlaneMeshing.Controllers
                     PlanePosition = planes[i].PlaneData.Center,
 #endif
                     Vertices = originVertices,
-                    Offset = _planeMeshingConfig.AntialiasingTrashHold
+                    Offset = 0
                 };
 
                 var antiAliasingHandle = antiAliasingJob.Schedule(originVertices.Length, 64, handle);
