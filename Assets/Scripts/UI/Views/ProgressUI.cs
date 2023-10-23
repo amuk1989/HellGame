@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Scanning.Interfaces;
 using TMPro;
 using UniRx;
@@ -23,7 +24,7 @@ namespace UI.Views
         {
             _scanningService
                 .ScannedAreaAsObservable()
-                .Subscribe(value => _progressIndication.text = value.ToString("F1"))
+                .Subscribe(value => _progressIndication.text = value.ToString(CultureInfo.CurrentCulture))
                 .AddTo(this);
         }
     }

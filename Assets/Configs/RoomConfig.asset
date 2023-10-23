@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data:
     _holesMaterial: {fileID: 2100000, guid: 3c268de751c366e4da5fb1d3c6c1d197, type: 2}
-    _minArea: 2
+    _minArea: 1
     _stencilLayerMask:
       serializedVersion: 2
       m_Bits: 128

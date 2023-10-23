@@ -15,6 +15,7 @@ namespace GameStage.Stages
         public void Execute()
         {
             _roomService.CreateHoles();
+            _roomService.CreateEnvironment();
         }
 
         public void Complete()

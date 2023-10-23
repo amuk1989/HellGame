@@ -11,6 +11,7 @@ namespace Utility
         public const string Plane = "Prefabs/Environment/PlaneView";
         public const string ScanProgressUI = "Prefabs/UI/ScannedProgressUI";
         public const string ScanStopUI = "Prefabs/UI/StopScanningUI";
+        public const string Environment = "Prefabs/Environment/Slender";
         public static readonly LayerMask DefaultLayer = LayerMask.NameToLayer("Default");
     }
 }

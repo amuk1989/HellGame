@@ -1,6 +1,8 @@
 ﻿using Scanning.Interfaces;
 using Scanning.Repositories;
 using Scanning.Services;
+using Scanning.View;
+using Utility;
 using Zenject;
 
 namespace Scanning.Bootstrap
@@ -23,6 +25,10 @@ namespace Scanning.Bootstrap
                 .Bind<HolesRepository>()
                 .AsSingle()
                 .NonLazy();
+
+            Container
+                .BindFactory<Environment, Environment.Factory>()
+                .FromComponentInNewPrefabResource(Consts.Environment);
         }
     }
 }

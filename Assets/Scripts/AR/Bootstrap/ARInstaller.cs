@@ -44,6 +44,11 @@ namespace AR.Bootstrap
                 .NonLazy();
 
             Container
+                .BindInterfacesTo<ARCameraService>()
+                .AsSingle()
+                .NonLazy();
+
+            Container
                 .Bind<ARPlaneRepository>()
                 .AsSingle()
                 .NonLazy();
