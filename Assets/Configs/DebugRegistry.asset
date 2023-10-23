@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isEnable: 1
   _arDebug: {fileID: 11400000, guid: 263f335fb43100d44bbc2bfb5631cf36, type: 2}
+  _debug: {fileID: 11400000, guid: 94ecf02a22df33d4494de647f4d04108, type: 2}

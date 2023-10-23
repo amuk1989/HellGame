@@ -44,7 +44,7 @@ namespace AR.Controllers
 
         internal void StopMeshing()
         {
-            // _arMeshManager.Dispose();
+            _arMeshManager.Dispose();
         }
     }
 }
