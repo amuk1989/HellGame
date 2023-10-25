@@ -9,6 +9,7 @@ namespace AR.Services
     {
         private readonly ARController _controller;
         public Camera ARCamera => _controller.ARCamera;
+        public Camera PortalCamera => _controller.PortalCamera;
 
         private ARCameraService(ARController controller)
         {

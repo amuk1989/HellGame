@@ -7,9 +7,10 @@
         "ARDK",
         "Unity.Mathematics",
         "UniTask",
-        "Unity.Collections",
         "Unity.TextMeshPro",
-        "Unity.Burst"
+        "Unity.Burst",
+        "Unity.Jobs",
+        "Unity.Collections"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

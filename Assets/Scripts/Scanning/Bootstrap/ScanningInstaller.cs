@@ -2,6 +2,7 @@
 using Scanning.Repositories;
 using Scanning.Services;
 using Scanning.View;
+using UnityEngine;
 using Utility;
 using Zenject;
 
@@ -20,6 +21,11 @@ namespace Scanning.Bootstrap
                 .BindInterfacesTo<ScanningService>()
                 .AsSingle()
                 .NonLazy();
+            
+            Container
+                .BindInterfacesTo<PortalService>()
+                .AsSingle()
+                .NonLazy();
 
             Container
                 .Bind<HolesRepository>()
@@ -29,6 +35,10 @@ namespace Scanning.Bootstrap
             Container
                 .BindFactory<Environment, Environment.Factory>()
                 .FromComponentInNewPrefabResource(Consts.Environment);
+            
+            Container
+                .BindFactory<RenderTexture, Material, Mesh, HoleView, HoleView.Factory>()
+                .FromComponentInNewPrefabResource(Consts.Hole);
         }
     }
 }

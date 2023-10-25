@@ -58,9 +58,9 @@ namespace Scanning.Services
                 average += vertex;
             }
 
-            average = new Vector3(average.x / vertices.Count, _camera.CameraPosition.y - 1.5f, average.z / vertices.Count);
+            average = new Vector3(average.x / vertices.Count, _camera.CameraPosition.y - 1f, average.z / vertices.Count);
 
-            var point = average + _camera.CameraSightDirection;
+            var point = _camera.CameraPosition + _camera.CameraSightDirection;
             var environment = _factory.Create();
             environment.transform.SetPositionAndRotation(point, _camera.CameraRotation);
         }

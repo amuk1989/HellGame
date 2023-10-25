@@ -29,6 +29,7 @@ namespace AR.Controllers
         [CanBeNull] internal IARSession ARSession => _arManager?.SessionManager.ARSession;
         [CanBeNull] internal IARMesh ARMesh => _arManager?.SessionManager.ARSession.Mesh;
         [CanBeNull] internal Camera ARCamera => _arManager?.ARCamera;
+        [CanBeNull] internal Camera PortalCamera => _arManager?.PortalCamera;
 
         public void Initialize()
         {
@@ -44,7 +45,7 @@ namespace AR.Controllers
 
         internal void StopMeshing()
         {
-            _arMeshManager.Dispose();
+            // _arMeshManager.Dispose();
         }
     }
 }

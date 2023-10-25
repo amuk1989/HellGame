@@ -36,7 +36,7 @@ namespace PlaneMeshing.View
             _meshFilter.mesh = _mesh;
             _meshRenderer.material = _material;
 
-            gameObject.layer = (int)Mathf.Log(_mask+1,2);;
+            // gameObject.layer = (int)Mathf.Log(_mask+1,2);;
         }
 
         public void Dispose()
