@@ -56,11 +56,13 @@ namespace EnvironmentSystem.Services
                 average += vertex;
             }
 
-            average = new Vector3(average.x / vertices.Count, _camera.CameraPosition.y - 1f, average.z / vertices.Count);
+            average = vertices.Count > 0? 
+                new Vector3(average.x / vertices.Count, _camera.CameraPosition.y - 2.5f, average.z / vertices.Count):
+                _camera.CameraPosition + _camera.CameraSightDirection;
 
-            var point = _camera.CameraPosition + _camera.CameraSightDirection;
-            var environment = _factory.Create();
-            environment.transform.SetPositionAndRotation(average, _camera.CameraRotation);
+            var envRotation = Quaternion.Euler(0, _camera.CameraRotation.eulerAngles.y, 0);
+            
+            var environment = _factory.Create(average, envRotation);
         }
     }
 }

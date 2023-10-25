@@ -17,7 +17,7 @@ namespace EnvironmentSystem.Bootstrap
                 .NonLazy();
             
             Container
-                .BindFactory<EnvironmentView, EnvironmentView.Factory>()
+                .BindFactory<Vector3, Quaternion, EnvironmentView, EnvironmentView.Factory>()
                 .FromComponentInNewPrefabResource(Consts.Environment);
             
             Container
