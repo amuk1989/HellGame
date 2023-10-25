@@ -9,8 +9,10 @@ namespace Utility
         public const string ARManager = "Prefabs/ARSceneManager";
         public const string ARMesh = "Prefabs/ARMesh";
         public const string Plane = "Prefabs/Environment/PlaneView";
+        public const string Hole = "Prefabs/Environment/Hole";
         public const string ScanProgressUI = "Prefabs/UI/ScannedProgressUI";
         public const string ScanStopUI = "Prefabs/UI/StopScanningUI";
+        public const string Environment = "Prefabs/Environment/Slender";
         public static readonly LayerMask DefaultLayer = LayerMask.NameToLayer("Default");
     }
 }

@@ -14,7 +14,7 @@ using Zenject;
 
 namespace AR.Services
 {
-    public class ARService: IARService, IARProvider, IDisposable, IInitializable, ICameraProvider
+    public class ARService: IARService, IARProvider, IDisposable, IInitializable
     {
         private readonly ARController _controller;
         private readonly ARPlaneRepository _arPlaneRepository;

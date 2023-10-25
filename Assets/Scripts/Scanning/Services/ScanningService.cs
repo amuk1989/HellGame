@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using AR.Interfaces;
 using Cysharp.Threading.Tasks;
+using EnvironmentSystem.Data;
 using PlaneMeshing.Interfaces;
-using Scanning.Data;
 using Scanning.Interfaces;
 using Scanning.Utilities;
 using UniRx;
@@ -19,7 +19,7 @@ namespace Scanning.Services
         private readonly RoomConfigData _roomConfig;
 
         private readonly CompositeDisposable _compositeDisposable = new();
-        private volatile ReactiveProperty<float> _scannedArea = new();
+        private readonly ReactiveProperty<float> _scannedArea = new();
         private readonly ReactiveCommand _onEnoughScanned = new();
 
         private readonly Stopwatch _stopwatch = new();
@@ -49,12 +49,20 @@ namespace Scanning.Services
 
         private void StartCalculateArea()
         {
-            _planeMeshes
-                .PlaneMeshUpdateAsObservable()
+            Observable
+                .Timer(TimeSpan.FromSeconds(1))
+                .Repeat()
                 .Subscribe(data =>
                 {
                     _stopwatch.Restart();
-                    _scannedArea.Value += AreaCalculationUtility.CalculatePlaneArea(data.Value);
+                    var scannedArea = 0f;
+                    foreach (var mesh in _planeMeshes.PlaneMeshes)
+                    {
+                        scannedArea += AreaCalculationUtility.CalculatePlaneArea(mesh.Value);
+                    }
+
+                    _scannedArea.Value = scannedArea;
+                    
                     _stopwatch.Stop();
                     UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +
                                           $"ms {_stopwatch.ElapsedMilliseconds}");
@@ -63,18 +71,6 @@ namespace Scanning.Services
 
                     _isEnoughScanned = true;
                     _onEnoughScanned.Execute();
-                })
-                .AddTo(_compositeDisposable);
-            
-            _planeMeshes
-                .PlaneMeshRemoveAsObservable()
-                .Subscribe(data =>
-                {
-                    _stopwatch.Restart();
-                    _scannedArea.Value -= AreaCalculationUtility.CalculatePlaneArea(data.Value);
-                    _stopwatch.Stop();
-                    UnityEngine.Debug.Log($"[ScanningService] Ticks {_stopwatch.ElapsedTicks}{Environment.NewLine}" +
-                                          $"ms {_stopwatch.ElapsedMilliseconds}");
                 })
                 .AddTo(_compositeDisposable);
         }

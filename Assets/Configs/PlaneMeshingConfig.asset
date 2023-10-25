@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data:
     _antialiasingTrashHold: 0.1
-    _planeMaterial: {fileID: 2100000, guid: bc409619c052d284abf50d66b72ca3ef, type: 2}
+    _planeMaterial: {fileID: 2100000, guid: 3c268de751c366e4da5fb1d3c6c1d197, type: 2}

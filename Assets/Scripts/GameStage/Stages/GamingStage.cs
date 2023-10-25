@@ -1,4 +1,5 @@
-﻿using GameStage.Interfaces;
+﻿using EnvironmentSystem.Interfaces;
+using GameStage.Interfaces;
 using Scanning.Interfaces;
 
 namespace GameStage.Stages
@@ -15,6 +16,7 @@ namespace GameStage.Stages
         public void Execute()
         {
             _roomService.CreateHoles();
+            _roomService.CreateEnvironment();
         }
 
         public void Complete()

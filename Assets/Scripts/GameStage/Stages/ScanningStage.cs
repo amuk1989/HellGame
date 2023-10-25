@@ -1,4 +1,5 @@
-﻿using GameStage.Interfaces;
+﻿using EnvironmentSystem.Interfaces;
+using GameStage.Interfaces;
 using PlaneMeshing.Interfaces;
 using Scanning.Interfaces;
 
@@ -8,17 +9,21 @@ namespace GameStage.Stages
     {
         private readonly IScanningService _scanningService;
         private readonly IPlaneRecognizer _planeRecognizer;
+        private readonly IPortalTextureProvider _portalTextureProvider;
 
-        public ScanningStage(IScanningService scanningService, IPlaneRecognizer planeRecognizer)
+        public ScanningStage(IScanningService scanningService, IPlaneRecognizer planeRecognizer, 
+            IPortalTextureProvider portalTextureProvider)
         {
             _scanningService = scanningService;
             _planeRecognizer = planeRecognizer;
+            _portalTextureProvider = portalTextureProvider;
         }
 
-        public void Execute()
+        public async void Execute()
         {
             _planeRecognizer.StartRecognizer();
-            _scanningService.StartScanningTask();
+            await _scanningService.StartScanningTask();
+            _portalTextureProvider.CreateTexture();
         }
 
         public void Complete()

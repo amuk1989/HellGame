@@ -1,10 +1,6 @@
-﻿using GameStage.Data;
-using GameStage.Interfaces;
-using UI.Interfaces;
+﻿using UI.Interfaces;
 using UI.Views;
-using UniRx;
 using UnityEngine;
-using Zenject;
 
 namespace UI.Services
 {
