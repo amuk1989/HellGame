@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
-using PlaneMeshing.Factories;
+using EnvironmentSystem.Data;
+using EnvironmentSystem.Interfaces;
+using EnvironmentSystem.View;
 using PlaneMeshing.View;
-using Scanning.Data;
-using Scanning.Interfaces;
-using Scanning.View;
 using UnityEngine;
-using Zenject;
 
-namespace Scanning.Repositories
+namespace EnvironmentSystem.Repositories
 {
     internal class HolesRepository
     {

@@ -1,4 +1,5 @@
-﻿using GameStage.Interfaces;
+﻿using EnvironmentSystem.Interfaces;
+using GameStage.Interfaces;
 using Scanning.Interfaces;
 
 namespace GameStage.Stages

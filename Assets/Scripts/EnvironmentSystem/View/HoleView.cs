@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace Scanning.View
+namespace EnvironmentSystem.View
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class HoleView : MonoBehaviour

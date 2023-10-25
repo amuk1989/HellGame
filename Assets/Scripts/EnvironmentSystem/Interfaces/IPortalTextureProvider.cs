@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Scanning.Interfaces
+namespace EnvironmentSystem.Interfaces
 {
     public interface IPortalTextureProvider
     {

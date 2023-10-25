@@ -1,5 +1,6 @@
 ﻿using AR.Bootstrap;
 using Debuger.Bootstrap;
+using EnvironmentSystem.Bootstrap;
 using GameStage.Bootstrap;
 using PlaneMeshing.Bootstrap;
 using Scanning.Bootstrap;
@@ -15,6 +16,7 @@ namespace Main.Bootstrap
             Container.Install<UIBootstrap>();
             Container.Install<ARInstaller>();
             Container.Install<ScanningInstaller>();
+            Container.Install<EnvironmentInstaller>();
             Container.Install<PlaneMeshingInstaller>();
             Container.Install<GameStageInstaller>();
             Container.Install<DebugInstaller>();

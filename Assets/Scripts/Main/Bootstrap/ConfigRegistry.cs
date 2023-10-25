@@ -1,6 +1,6 @@
-﻿using GameStage.Controllers;
+﻿using EnvironmentSystem.Data;
+using GameStage.Controllers;
 using PlaneMeshing.Data;
-using Scanning.Data;
 using UnityEngine;
 using Utility;
 using Zenject;

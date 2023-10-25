@@ -3,7 +3,7 @@ using Base.Data;
 using Base.Interfaces;
 using UnityEngine;
 
-namespace Scanning.Data
+namespace EnvironmentSystem.Data
 {
     [CreateAssetMenu(fileName = "RoomConfig", menuName = "Configs/RoomConfig", order = 0)]
     public class RoomConfig : BaseConfig<RoomConfigData>

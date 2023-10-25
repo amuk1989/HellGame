@@ -22,10 +22,10 @@ namespace UI.Views
 
         private void Start()
         {
-            _scanningService
-                .ScannedAreaAsObservable()
-                .Subscribe(value => _progressIndication.text = value.ToString(CultureInfo.CurrentCulture))
-                .AddTo(this);
+            // _scanningService
+            //     .ScannedAreaAsObservable()
+            //     .Subscribe(value => _progressIndication.text = value.ToString())
+            //     .AddTo(this);
         }
     }
 }

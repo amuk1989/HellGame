@@ -1,4 +1,4 @@
-﻿namespace Scanning.Interfaces
+﻿namespace EnvironmentSystem.Interfaces
 {
     public interface IRoomService
     {

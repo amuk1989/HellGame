@@ -1,25 +1,23 @@
 ﻿using System.Collections.Generic;
 using AR.Interfaces;
-using PlaneMeshing.Factories;
+using EnvironmentSystem.Interfaces;
+using EnvironmentSystem.Repositories;
+using EnvironmentSystem.View;
 using PlaneMeshing.Interfaces;
-using Scanning.Data;
-using Scanning.Interfaces;
-using Scanning.Repositories;
-using Scanning.View;
 using UnityEngine;
 using Zenject;
 
-namespace Scanning.Services
+namespace EnvironmentSystem.Services
 {
     internal class RoomService: IRoomService, IInitializable
     {
         private readonly IPlaneMeshesProvider _planeMeshes;
         private readonly HolesRepository _holesRepository;
         private readonly ICameraProvider _camera;
-        private readonly Environment.Factory _factory;
+        private readonly EnvironmentView.Factory _factory;
         
         public RoomService(IPlaneMeshesProvider planeMeshes, HolesRepository holesRepository, ICameraProvider camera,
-            Environment.Factory factory)
+            EnvironmentView.Factory factory)
         {
             _planeMeshes = planeMeshes;
             _holesRepository = holesRepository;
@@ -62,7 +60,7 @@ namespace Scanning.Services
 
             var point = _camera.CameraPosition + _camera.CameraSightDirection;
             var environment = _factory.Create();
-            environment.transform.SetPositionAndRotation(point, _camera.CameraRotation);
+            environment.transform.SetPositionAndRotation(average, _camera.CameraRotation);
         }
     }
 }

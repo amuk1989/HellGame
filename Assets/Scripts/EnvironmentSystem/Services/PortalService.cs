@@ -1,11 +1,9 @@
 ﻿using AR.Interfaces;
-using Cysharp.Threading.Tasks;
-using Niantic.ARDK.AR;
-using Scanning.Interfaces;
+using EnvironmentSystem.Interfaces;
 using UnityEngine;
 using Zenject;
 
-namespace Scanning.Services
+namespace EnvironmentSystem.Services
 {
     public class PortalService: IInitializable, IPortalTextureProvider
     {
