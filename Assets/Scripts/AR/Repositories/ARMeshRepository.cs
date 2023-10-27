@@ -38,7 +38,6 @@ namespace AR.Repositories
             foreach (var block in args.BlocksObsoleted)
             {
                 if (!_meshes.ContainsKey(block)) continue;
-                _meshes[block].Mesh.Clear();
                 _meshes.Remove(block);
             }
             
@@ -50,11 +49,6 @@ namespace AR.Repositories
         
         internal void ClearMeshes(MeshBlocksClearedArgs args)
         {
-            foreach (var mesh in _meshes)
-            {
-                mesh.Value.Mesh.Clear();
-            }
-
             _meshes.Clear();
         }
     }

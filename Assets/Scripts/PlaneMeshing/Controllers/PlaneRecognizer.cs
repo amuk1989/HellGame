@@ -48,8 +48,6 @@ namespace PlaneMeshing.Controllers
                     _semaphore.WaitOne();
                     
                     Recognize(meshData);
-                    
-                    meshData.Mesh.Clear();
 
                     _semaphore.Release();
                 })
@@ -67,9 +65,9 @@ namespace PlaneMeshing.Controllers
 
             for (int i = 0; i < planes.Count; i++)
             {
-                var originVertices = new NativeArray<Vector3>(meshData.Mesh.vertices, Allocator.Persistent);
-                var originTriangles = new NativeArray<int>(meshData.Mesh.triangles, Allocator.Persistent);
-                var triangles = new NativeArray<bool>(meshData.Mesh.triangles.Length, Allocator.Persistent);
+                var originVertices = new NativeArray<Vector3>(meshData.Vertices, Allocator.Persistent);
+                var originTriangles = new NativeArray<int>(meshData.Triangles, Allocator.Persistent);
+                var triangles = new NativeArray<bool>(meshData.Triangles.Length, Allocator.Persistent);
 
                 var job = new SearchTrianglesJob()
                 {
@@ -82,7 +80,7 @@ namespace PlaneMeshing.Controllers
                     TrashHold = _planeMeshingConfig.AntialiasingTrashHold
                 };
 
-                var handle = job.Schedule(meshData.Mesh.triangles.Length, 3);
+                var handle = job.Schedule(meshData.Triangles.Length, 3);
 
                 var antiAliasingJob = new AntialiasingPlaneJob()
                 {

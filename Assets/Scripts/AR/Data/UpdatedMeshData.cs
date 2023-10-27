@@ -4,12 +4,14 @@ namespace AR.Data
 {
     public struct UpdatedMeshData
     {
-        public readonly Mesh Mesh;
+        public readonly int[] Triangles;
+        public readonly Vector3[] Vertices;
         public readonly Vector3Int Id;
 
         public UpdatedMeshData(Mesh mesh, Vector3Int id)
         {
-            Mesh = Object.Instantiate(mesh);
+            Triangles = mesh.triangles;
+            Vertices = mesh.vertices;
             Id = id;
         }
     }
