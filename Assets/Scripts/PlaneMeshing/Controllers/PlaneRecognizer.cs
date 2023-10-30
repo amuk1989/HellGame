@@ -80,7 +80,7 @@ namespace PlaneMeshing.Controllers
                     TrashHold = _planeMeshingConfig.AntialiasingTrashHold
                 };
 
-                var handle = job.Schedule(meshData.Triangles.Length, 3);
+                var handle = job.ScheduleBatch(meshData.Triangles.Length, 3);
 
                 var antiAliasingJob = new AntialiasingPlaneJob()
                 {
