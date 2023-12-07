@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AR.Data;
-using AR.Factories;
 using AR.Models;
-using Niantic.ARDK.AR.Anchors;
-using Niantic.ARDK.Utilities;
 using PlaneMeshing.Utilities;
 using UniRx;
 

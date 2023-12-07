@@ -10,7 +10,9 @@
         "Unity.TextMeshPro",
         "Unity.Burst",
         "Unity.Jobs",
-        "Unity.Collections"
+        "Unity.Collections",
+        "Niantic.Lightship.AR",
+        "Unity.XR.OpenXR"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AR.Data;
-using Niantic.ARDK.AR.Mesh;
 using UniRx;
 using UnityEngine;
 using Zenject;

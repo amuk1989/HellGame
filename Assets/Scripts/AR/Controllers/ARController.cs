@@ -1,11 +1,10 @@
 ﻿using AR.Repositories;
 using AR.View;
 using JetBrains.Annotations;
-using Niantic.ARDK.AR;
-using Niantic.ARDK.AR.Configuration;
-using Niantic.ARDK.AR.Mesh;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 using Zenject;
+using ARMeshManager = AR.View.ARMeshManager;
 
 namespace AR.Controllers
 {
@@ -26,8 +25,8 @@ namespace AR.Controllers
             _arMeshFactory = arMeshFactory;
         }
 
-        [CanBeNull] internal IARSession ARSession => _arManager?.SessionManager.ARSession;
-        [CanBeNull] internal IARMesh ARMesh => _arManager?.SessionManager.ARSession.Mesh;
+        [CanBeNull] internal ARSession ARSession => _arManager?.SessionManager.ARSession;
+        [CanBeNull] internal A ARMesh => _arManager?.SessionManager.ARSession.Mesh;
         [CanBeNull] internal Camera ARCamera => _arManager?.ARCamera;
         [CanBeNull] internal Camera PortalCamera => _arManager?.PortalCamera;
 

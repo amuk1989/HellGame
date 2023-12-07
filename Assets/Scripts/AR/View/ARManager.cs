@@ -1,5 +1,4 @@
-﻿using Niantic.ARDK.Extensions;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace AR.View
